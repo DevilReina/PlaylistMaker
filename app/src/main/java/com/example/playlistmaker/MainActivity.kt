@@ -1,9 +1,9 @@
 package com.example.playlistmaker
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -19,19 +19,22 @@ class MainActivity : AppCompatActivity() {
         // Анонимный класс для первой кнопки
         val searchClickListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
-                Toast.makeText(this@MainActivity, "Поиск", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@MainActivity, SearchActivity::class.java)
+                startActivity(intent)
             }
         }
         searchButton.setOnClickListener(searchClickListener)
 
         // Лямбда-выражение для второй кнопки
         mediaLibraryButton.setOnClickListener {
-            Toast.makeText(this@MainActivity, "Медиатека", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this@MainActivity, MediaLibraryActivity::class.java)
+            startActivity(intent)
         }
 
         // onClick для третьей кнопки
         settingsButton.setOnClickListener {
-            Toast.makeText(this@MainActivity, "Настройки", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this@MainActivity, SettingsActivity::class.java)
+            startActivity(intent)
         }
     }
 }

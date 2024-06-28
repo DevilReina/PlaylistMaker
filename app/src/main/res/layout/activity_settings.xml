@@ -14,17 +14,20 @@
         android:paddingBottom="16dp">
 
         <ImageView
+            android:id="@+id/back_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_arrow_back"
             android:contentDescription="@string/back_button"
-            android:paddingEnd="8dp"/>
+            android:paddingEnd="8dp"
+            />
 
         <TextView
+            android:id="@+id/settings_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Настройки"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:textColor="@android:color/black"/>
     </LinearLayout>
 
