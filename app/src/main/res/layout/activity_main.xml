@@ -14,7 +14,7 @@
         android:text="Playlist maker"
         android:textSize="22sp"
         android:textColor="@android:color/white"
-        android:layout_gravity="center"
+        android:layout_gravity="left"
         android:paddingBottom="24dp"/>
 
     <!-- Search Button -->
@@ -31,12 +31,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingEnd="8dp"
-            android:src="@drawable/ic_search" />
+            android:src="@drawable/ic_search"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Поиск"
+            android:text="@string/searth_btn"
             android:textSize="18sp"
             android:textColor="@android:color/black"/>
     </LinearLayout>
@@ -55,13 +55,13 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_library_vector"
+            android:src="@drawable/ic_library"
             android:paddingEnd="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Медиатека"
+            android:text="@string/media_btn"
             android:textSize="18sp"
             android:textColor="@android:color/black"/>
     </LinearLayout>
@@ -80,13 +80,13 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_settings_vector"
+            android:src="@drawable/ic_settings"
             android:paddingEnd="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Настройки"
+            android:text="@string/settings_btn"
             android:textSize="18sp"
             android:textColor="@android:color/black"/>
     </LinearLayout>
