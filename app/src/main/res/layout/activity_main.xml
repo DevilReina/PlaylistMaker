@@ -30,6 +30,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:src="@drawable/ic_search"
             android:contentDescription="@string/searth_btn"/>
@@ -57,6 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_library"
+            android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:contentDescription="@string/media_btn"/>
 
@@ -83,6 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_settings"
+            android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:contentDescription="@string/settings_btn"/>
 
