@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this@MainActivity, "Медиатека", Toast.LENGTH_SHORT).show()
         }
 
-        // onClick для третьей кнопки через xml атрибут
+        // onClick для третьей кнопки
         settingsButton.setOnClickListener {
             Toast.makeText(this@MainActivity, "Настройки", Toast.LENGTH_SHORT).show()
         }
