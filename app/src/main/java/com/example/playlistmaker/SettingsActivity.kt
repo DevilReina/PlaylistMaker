@@ -1,6 +1,5 @@
 package com.example.playlistmaker
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -10,10 +9,8 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val backButton = findViewById<View>(R.id.back_button)
+        val backButton = findViewById<View>(R.id.toolbar)
         backButton.setOnClickListener {
-            val intent = Intent(this@SettingsActivity, MainActivity::class.java)
-            startActivity(intent)
             finish()
         }
     }
