@@ -10,9 +10,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 
 class SearchActivity : AppCompatActivity() {
-
+    private var searchEditText: EditText? = null
     private var searchText: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +42,7 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 // Показываем или скрываем кнопку сброса в зависимости от наличия текста
-                clearButton.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
+                clearButton.isVisible = !s.isNullOrEmpty()
                 searchText = s.toString()
             }
 
@@ -67,7 +68,10 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        searchText = savedInstanceState.getString("SEARCH_TEXT", "")
-        findViewById<EditText>(R.id.searchEditText).setText(searchText)
+        searchText = savedInstanceState.getString("KEY_SEARCH_TEXT", "")
+        searchEditText?.setText(searchText)
+    }
+    companion object {
+        private const val KEY_SEARCH_TEXT = "SEARCH_TEXT"
     }
 }

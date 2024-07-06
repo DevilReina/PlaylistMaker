@@ -1,0 +1,15 @@
+<resources>
+    <color name="primary">#FFFFFF</color>
+    <color name="secondary">#000000</color>
+    <color name="background">#000000</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="searth_clr">#FFFFFF</color>
+    <color name="main_bg">#000000</color>
+    <color name="icon_back">#FFFFFF</color>
+    <color name="icon">#FFFFFF</color>
+
+    <color name="switch_thumb_color_light">#FF6200EE</color>
+    <color name="switch_thumb_color_dark">#FF6200EE</color>
+    <color name="switch_track_color_light">#FFC7C7C7</color>
+    <color name="switch_track_color_dark">#FFB0B0B0</color>
+</resources>
