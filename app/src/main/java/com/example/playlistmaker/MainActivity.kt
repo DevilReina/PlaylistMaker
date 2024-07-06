@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // onClick для третьей кнопки
+        // onClick для третьей кнопки через xml атрибут
         settingsButton.setOnClickListener {
             val intent = Intent(this@MainActivity, SettingsActivity::class.java)
             startActivity(intent)

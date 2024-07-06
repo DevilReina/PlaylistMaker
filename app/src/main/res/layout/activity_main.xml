@@ -4,94 +4,61 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="#4285F4">
+    android:background="?attr/colorOnSecondary">
 
     <!-- Title TextView -->
     <TextView
+        style="@style/CustomText"
         android:id="@+id/titleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textSize="22sp"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/colorOnPrimary"
         android:layout_gravity="start"
         android:paddingBottom="24dp"/>
 
     <!-- Search Button -->
     <LinearLayout
         android:id="@+id/search_button"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:background="@drawable/rounded_button_background"
-        android:gravity="center">
+        style="@style/CustomButtonLayout"
+        android:layout_marginTop="0dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="8dp"
+            style="@style/CustomButtonImage"
             android:src="@drawable/ic_search"
-            android:contentDescription="@string/searth_btn"/>
+            android:contentDescription="@string/search"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/searth_btn"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"/>
+            style="@style/CustomText"
+            android:text="@string/search"/>
     </LinearLayout>
 
     <!-- Media Library Button -->
     <LinearLayout
         android:id="@+id/media_library_button"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/rounded_button_background"
-        android:gravity="center">
+        style="@style/CustomButtonLayout">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/CustomButtonImage"
             android:src="@drawable/ic_library"
-            android:paddingHorizontal="8dp"
             android:contentDescription="@string/media_btn"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/media_btn"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"/>
+            style="@style/CustomText"
+            android:text="@string/media_btn"/>
     </LinearLayout>
 
     <!-- Settings Button -->
     <LinearLayout
         android:id="@+id/settings_button"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/rounded_button_background"
-        android:gravity="center">
+        style="@style/CustomButtonLayout">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/CustomButtonImage"
             android:src="@drawable/ic_settings"
-            android:paddingHorizontal="8dp"
             android:contentDescription="@string/settings_btn"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_btn"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"/>
+            style="@style/CustomText"
+            android:text="@string/settings_btn"/>
     </LinearLayout>
 
 </LinearLayout>

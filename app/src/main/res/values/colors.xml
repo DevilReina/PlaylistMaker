@@ -1,5 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="primary">#FFFFFF</color>
+    <color name="secondary">#000000</color>
+    <color name="background">#FFFFFF</color>
+    <color name="surface">#000000</color>
+    <color name="searth_clr">#E6E8EB</color>
+    <color name="main_bg">#4285F4</color>
+    <color name="icon_back">#1A1B22</color>
+    <color name="icon">#AEAFB4</color>
+
+    <color name="switch_thumb_color_light">#FF6200EE</color>
+    <color name="switch_thumb_color_dark">#FF6200EE</color>
+    <color name="switch_track_color_light">#FFC7C7C7</color>
+    <color name="switch_track_color_dark">#FFB0B0B0</color>
 </resources>
