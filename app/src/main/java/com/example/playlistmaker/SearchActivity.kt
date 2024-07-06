@@ -13,7 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 
 class SearchActivity : AppCompatActivity() {
-    private var searchEditText: EditText? = null
+    private lateinit var searchEditText: EditText
+    private lateinit var clearButton: ImageButton
     private var searchText: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,8 +26,8 @@ class SearchActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        val searchEditText = findViewById<EditText>(R.id.searchEditText)
-        val clearButton = findViewById<ImageButton>(R.id.clearButton)
+        searchEditText = findViewById(R.id.searchEditText)
+        clearButton = findViewById(R.id.clearButton)
 
         clearButton.setOnClickListener {
             searchEditText.text.clear()
@@ -52,7 +53,7 @@ class SearchActivity : AppCompatActivity() {
         })
 
         // Скрываем кнопку сброса, если строка поиска пустая
-        clearButton.visibility = if (searchEditText.text.isEmpty()) View.GONE else View.VISIBLE
+        clearButton.isVisible = searchEditText.text.isNotEmpty()
 
         // Восстанавливаем состояние
         if (savedInstanceState != null) {
@@ -69,7 +70,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         searchText = savedInstanceState.getString("KEY_SEARCH_TEXT", "")
-        searchEditText?.setText(searchText)
+        searchEditText.setText(searchText)
     }
     companion object {
         private const val KEY_SEARCH_TEXT = "SEARCH_TEXT"
