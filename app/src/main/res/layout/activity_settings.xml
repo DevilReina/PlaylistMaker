@@ -118,7 +118,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_agreement"
+                app:srcCompat="@drawable/ic_arrow_right"
                 android:paddingHorizontal="8dp"/>
         </LinearLayout>
     </LinearLayout>
