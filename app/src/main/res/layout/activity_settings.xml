@@ -1,22 +1,39 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:orientation="vertical"
+    android:background="?attr/colorOnBackground">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+
+    <LinearLayout
+        android:layout_height="56dp"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:title="@string/settings_btn"
-        app:navigationIcon="@drawable/ic_arrow_back" />
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_height="24dp"
+            android:layout_width="24dp"
+            android:background="@drawable/ic_arrow_back"
+            android:layout_marginEnd="12dp"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/settings_btn"
+            style="@style/Title"
+            />
+
+    </LinearLayout>
 
     <!-- Остальная разметка для элементов настроек -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_below="@id/toolbar"
         android:layout_marginTop="24dp">
 
         <!-- Темная тема -->
@@ -27,20 +44,22 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                style="@style/SettingsText"
                 android:layout_weight="1"
-                android:text="Темная тема"
-                android:textSize="18sp"
-                android:textColor="@android:color/black"/>
+                android:text="@string/dark_theme"
+                android:textColor="@color/surface"/>
 
             <Switch
+                android:id="@+id/dark_mode_switch"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                style="@style/AppSwitchStyle"/>
+
         </LinearLayout>
 
         <!-- Поделиться приложением -->
         <LinearLayout
+            android:id="@+id/share_app_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -48,12 +67,10 @@
             android:layout_marginTop="24dp">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                style="@style/SettingsText"
                 android:layout_weight="1"
-                android:text="Поделиться приложением"
-                android:textSize="18sp"
-                android:textColor="@android:color/black"/>
+                android:text="@string/share_btn"
+                android:textColor="@color/surface"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -63,6 +80,7 @@
 
         <!-- Написать в поддержку -->
         <LinearLayout
+            android:id="@+id/contact_support_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -70,12 +88,10 @@
             android:layout_marginTop="24dp">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                style="@style/SettingsText"
                 android:layout_weight="1"
-                android:text="Написать в поддержку"
-                android:textSize="18sp"
-                android:textColor="@android:color/black"/>
+                android:text="@string/support_btn"
+                android:textColor="@color/surface"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -85,6 +101,7 @@
 
         <!-- Пользовательское соглашение -->
         <LinearLayout
+            android:id="@+id/user_agreement_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -92,12 +109,11 @@
             android:layout_marginTop="24dp">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                style="@style/SettingsText"
                 android:layout_weight="1"
-                android:text="Пользовательское соглашение"
-                android:textSize="18sp"
-                android:textColor="@android:color/black"/>
+                android:text="@string/agreement_btn"
+
+                android:textColor="@color/surface"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -106,4 +122,4 @@
                 android:paddingHorizontal="8dp"/>
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

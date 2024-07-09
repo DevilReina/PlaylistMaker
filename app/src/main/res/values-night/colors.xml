@@ -1,12 +1,12 @@
 <resources>
     <color name="primary">#FFFFFF</color>
     <color name="secondary">#000000</color>
-    <color name="background">#FFFFFF</color>
-    <color name="surface">#000000</color>
-    <color name="searth_clr">#E6E8EB</color>
-    <color name="main_bg">#4285F4</color>
-    <color name="icon_back">#1A1B22</color>
-    <color name="icon">#AEAFB4</color>
+    <color name="background">#000000</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="searth_clr">#FFFFFF</color>
+    <color name="main_bg">#000000</color>
+    <color name="icon_back">#FFFFFF</color>
+    <color name="icon">#FFFFFF</color>
 
     <color name="switch_thumb_color_light">#FF6200EE</color>
     <color name="switch_thumb_color_dark">#FF6200EE</color>
