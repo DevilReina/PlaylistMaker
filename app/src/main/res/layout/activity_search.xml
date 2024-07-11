@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:paddingEnd="10dp"
         android:background="@drawable/corner_input"
-        android:layout_marginTop="@dimen/dp_16">
+        android:layout_marginTop="@dimen/dp_8">
 
         <EditText
             android:id="@+id/searchEditText"
