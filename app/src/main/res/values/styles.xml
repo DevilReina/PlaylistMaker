@@ -1,9 +1,6 @@
 <resources>
     <!-- Button style -->
     <style name="CustomButtonLayout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:layout_weight">1</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:background">@drawable/rounded_button_background</item>
         <item name="android:gravity">center</item>
@@ -13,8 +10,6 @@
     </style>
 
     <style name="CustomText">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/secondary</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
@@ -22,8 +17,6 @@
     </style>
 
     <style name="SettingsText">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/secondary</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
@@ -31,8 +24,6 @@
     </style>
 
     <style name="CustomButtonImage">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingHorizontal">8dp</item>
     </style>
 
@@ -42,8 +33,6 @@
 
     </style>
     <style name="Title">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/secondary</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
@@ -51,8 +40,6 @@
     </style>
 
     <style name="TrackName">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/secondary</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
@@ -60,22 +47,14 @@
     </style>
 
     <style name="ArtistName">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">11sp</item>
         <item name="android:textColor">@color/icon</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
     </style>
 
-    <style name="TrackDot">
-        <item name="android:layout_width">13dp</item>
-        <item name="android:layout_height">13dp</item>
-    </style>
 
     <style name="TrackTime">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">11sp</item>
         <item name="android:textColor">@color/icon</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>

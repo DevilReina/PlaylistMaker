@@ -7,6 +7,7 @@
     <color name="main_bg">#4285F4</color>
     <color name="icon_back">#1A1B22</color>
     <color name="icon">#AEAFB4</color>
+    <color name="search_hint">#AAAAAA</color>
 
 
     <color name="switch_thumb_color_light">#FF6200EE</color>

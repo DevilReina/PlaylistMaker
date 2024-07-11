@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:paddingHorizontal="16dp"
     android:orientation="vertical"
     android:background="?attr/colorOnBackground">
 
@@ -14,8 +14,8 @@
 
         <ImageView
             android:id="@+id/back"
-            android:layout_height="24dp"
-            android:layout_width="24dp"
+            android:layout_height="@dimen/dp_24"
+            android:layout_width="@dimen/dp_24"
             android:background="@drawable/ic_arrow_back"
             android:layout_marginEnd="12dp"/>
 
@@ -44,6 +44,8 @@
             android:gravity="center_vertical">
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 style="@style/SettingsText"
                 android:layout_weight="1"
                 android:text="@string/dark_theme"
@@ -67,6 +69,8 @@
             android:layout_marginTop="24dp">
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 style="@style/SettingsText"
                 android:layout_weight="1"
                 android:text="@string/share_btn"
@@ -88,6 +92,8 @@
             android:layout_marginTop="24dp">
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 style="@style/SettingsText"
                 android:layout_weight="1"
                 android:text="@string/support_btn"
@@ -109,6 +115,8 @@
             android:layout_marginTop="24dp">
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 style="@style/SettingsText"
                 android:layout_weight="1"
                 android:text="@string/agreement_btn"

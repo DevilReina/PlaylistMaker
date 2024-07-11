@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:paddingHorizontal="@dimen/dp_16"
     tools:context=".SearchActivity"
     android:orientation="vertical"
     android:background="?attr/colorOnBackground">
@@ -18,13 +18,13 @@
 
         <ImageView
             android:id="@+id/back"
-            android:layout_height="24dp"
-            android:layout_width="24dp"
+            android:layout_height="@dimen/dp_24"
+            android:layout_width="@dimen/dp_24"
             android:background="@drawable/ic_arrow_back"
             android:layout_marginEnd="12dp"/>
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/search"
@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:paddingEnd="10dp"
         android:background="@drawable/corner_input"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="@dimen/dp_16">
 
         <EditText
             android:id="@+id/searchEditText"
@@ -47,22 +47,22 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorOnPrimary"
             android:drawableStart="@drawable/ic_search"
-            android:drawablePadding="8dp"
+            android:drawablePadding="@dimen/dp_8"
             android:hint="@string/search"
             android:layout_gravity="center"
             android:paddingHorizontal="12dp"
             android:maxLines="1"
             android:inputType="text"
             android:textColor="@android:color/black"
-            android:textColorHint="@android:color/darker_gray"
-            app:cornerRadius="8dp"
+            android:textColorHint="@color/search_hint"
+            app:cornerRadius="@dimen/dp_8"
             />
 
         <ImageButton
             android:id="@+id/clearButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
+            android:paddingStart="@dimen/dp_8"
             android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/clear_search"
             android:src="@drawable/ic_clear"
@@ -71,7 +71,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/dp_16"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
