@@ -8,6 +8,8 @@
     <color name="icon_back">#FFFFFF</color>
     <color name="icon">#FFFFFF</color>
     <color name="search_hint">#000000</color>
+    <color name="text_clr">#1A1B22</color>
+
 
     <color name="switch_thumb_color_light">#FF6200EE</color>
     <color name="switch_thumb_color_dark">#FF6200EE</color>
