@@ -1,6 +1,6 @@
 <resources>
     <color name="primary">#FFFFFF</color>
-    <color name="secondary">#000000</color>
+    <color name="secondary">#1A1B22</color>
     <color name="background">#FFFFFF</color>
     <color name="surface">#000000</color>
     <color name="searth_clr">#E6E8EB</color>
@@ -8,6 +8,7 @@
     <color name="icon_back">#1A1B22</color>
     <color name="icon">#AEAFB4</color>
     <color name="search_hint">#AAAAAA</color>
+    <color name="text_clr">#FFFFFF</color>
 
 
     <color name="switch_thumb_color_light">#FF6200EE</color>

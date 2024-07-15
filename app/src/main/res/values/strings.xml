@@ -19,4 +19,10 @@
 
     <string name="search">Поиск</string>
     <string name="clear_search">Очистить</string>
+
+    <string name="retry_btn">Обновить</string>
+
+    <string name="text_error">Ничего не нашлось</string>
+    <string name="internet_error">Проблемы со связью\n\n Загрузка не удалась. Проверьте подключение к интернету</string>
+
 </resources>
