@@ -66,4 +66,13 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
     </style>
+
+    <style name="RetryBtn">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/text_clr</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="textAllCaps">false</item>
+        <item name="backgroundTint">@color/primary</item>
+    </style>
 </resources>
