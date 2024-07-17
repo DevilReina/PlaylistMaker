@@ -1,92 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="13dp"
-    tools:context=".SearchActivity"
+    android:background="?attr/colorOnBackground"
     android:orientation="vertical"
-    android:background="?attr/colorOnBackground">
+    android:paddingHorizontal="13dp"
+    tools:context=".SearchActivity">
 
 
     <LinearLayout
-        android:layout_height="56dp"
         android:layout_width="match_parent"
-        android:gravity="center"
-        android:layout_marginStart="@dimen/dp_3">
+        android:layout_height="56dp"
+        android:layout_marginStart="@dimen/dp_3"
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/back"
-            android:layout_height="@dimen/dp_24"
             android:layout_width="@dimen/dp_24"
-            android:background="@drawable/ic_arrow_back"
-            android:layout_marginEnd="@dimen/dp_12"/>
+            android:layout_height="@dimen/dp_24"
+            android:layout_marginEnd="@dimen/dp_12"
+            android:background="@drawable/ic_arrow_back" />
 
         <TextView
+            style="@style/Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/search"
-            style="@style/Title"
-            />
+            android:text="@string/search" />
 
     </LinearLayout>
 
 
     <FrameLayout
-        android:layout_height="36dp"
         android:layout_width="match_parent"
+        android:layout_height="36dp"
         android:layout_marginStart="@dimen/dp_3"
-        android:paddingEnd="10dp"
+        android:layout_marginTop="@dimen/dp_8"
         android:background="@drawable/corner_input"
-        android:layout_marginTop="@dimen/dp_8">
+        android:paddingEnd="10dp">
 
         <EditText
             android:id="@+id/searchEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:background="?attr/colorOnPrimary"
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="@dimen/dp_8"
             android:hint="@string/search"
-            android:layout_gravity="center"
-            android:paddingHorizontal="@dimen/dp_12"
-            android:maxLines="1"
+            android:imeOptions="actionDone"
             android:inputType="text"
+            android:maxLines="1"
+            android:paddingHorizontal="@dimen/dp_12"
+            android:singleLine="true"
             android:textColor="@android:color/black"
             android:textColorHint="@color/search_hint"
-            app:cornerRadius="@dimen/dp_8"
-            android:imeOptions="actionDone"
-            android:singleLine="true"
-            />
+            app:cornerRadius="@dimen/dp_8" />
 
         <ImageButton
             android:id="@+id/clearButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/dp_8"
+            android:layout_gravity="end|center_vertical"
             android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/clear_search"
-            android:src="@drawable/ic_clear"
-            android:layout_gravity="end|center_vertical"/>
+            android:paddingStart="@dimen/dp_8"
+            android:src="@drawable/ic_clear" />
+
+
     </FrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_marginTop="@dimen/dp_16"
+    <TextView
+        android:id="@+id/searchHint"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_track" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@color/primary"
+        android:padding="16dp"
+        android:text="Вводите название на английском языке"
+        android:textAlignment="center"
+        android:textColor="@color/secondary"
+        android:visibility="gone" />
+
+
+    <TextView
+        android:id="@+id/searchHistoryTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="@string/search_history"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_weight="1"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_track" />
+
+        <Button
+            android:id="@+id/clearHistoryButton"
+            style="@style/RetryBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="@string/clear_history"
+            android:visibility="gone"
+            app:cornerRadius="54dp"
+            />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/errorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
+
 
         <ImageView
             android:id="@+id/errorImage"
@@ -94,31 +140,28 @@
             android:layout_height="120dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="102dp"
-            android:src="@drawable/error_empty"
             android:scaleType="center"
-            />
+            android:src="@drawable/error_empty" />
 
         <TextView
             android:id="@+id/errorText"
+            style="@style/ErrorText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dp_16"
-            android:textAlignment="center"
             android:text="@string/text_error"
-            style="@style/ErrorText"
-            />
+            android:textAlignment="center" />
 
         <Button
             android:id="@+id/retryButton"
+            style="@style/RetryBtn"
             android:layout_width="115dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dp_24"
             android:text="@string/retry_btn"
-            app:cornerRadius="54dp"
-            style="@style/RetryBtn"
-            />
+            app:cornerRadius="54dp" />
 
     </LinearLayout>
 

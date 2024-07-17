@@ -25,12 +25,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
+    private lateinit var hintMessage: TextView
     private lateinit var clearButton: ImageButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var errorImage: ImageView
     private lateinit var errorText: TextView
     private lateinit var errorLayout: LinearLayout
     private lateinit var retryButton: TextView
+    private lateinit var searchHistory: SearchHistory
+    private lateinit var searchHistoryTitle: TextView
+    private lateinit var clearHistoryButton: TextView
+    private lateinit var searchHistoryAdapter: TrackAdapter
+    private val emptyList: MutableList<Track> = mutableListOf()
+
     private var tracks: MutableList<Track>? = mutableListOf()
     private var searchText: String = ""
 
@@ -41,20 +48,45 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
+        searchHistory = SearchHistory(getSharedPreferences("SEARCH_PREFS", MODE_PRIVATE))
+
         val backButton = findViewById<View>(R.id.back)
         backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        searchEditText = findViewById(R.id.searchEditText)
+
         clearButton = findViewById(R.id.clearButton)
         errorImage = findViewById(R.id.errorImage)
         errorText = findViewById(R.id.errorText)
         errorLayout = findViewById(R.id.errorLayout)
         retryButton = findViewById(R.id.retryButton)
-
-
         recyclerView = findViewById(R.id.recyclerView)
+
+        searchEditText = findViewById(R.id.searchEditText)
+        hintMessage = findViewById(R.id.searchHint)
+        searchHistoryTitle = findViewById(R.id.searchHistoryTitle)
+        clearHistoryButton = findViewById(R.id.clearHistoryButton)
+
+        searchEditText.setOnFocusChangeListener { view, hasFocus ->
+            hintMessage.visibility = if (hasFocus && searchEditText.text.isEmpty()) View.VISIBLE else View.GONE
+            val historyState = hasFocus && searchEditText.text.isEmpty()
+            showHistory(historyState)
+        }
+
+        searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                hintMessage.visibility = if (searchEditText.hasFocus() && p0?.isEmpty() == true) View.VISIBLE else View.GONE
+                val historyState = searchEditText.hasFocus() && searchEditText.text.isEmpty()
+                showHistory(historyState)
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+        })
 
         clearButton.setOnClickListener {
             searchEditText.text.clear()
@@ -63,6 +95,7 @@ class SearchActivity : AppCompatActivity() {
             searchEditText.clearFocus()
             clearAdapter()
             clearError()
+            hideHistory(false)
         }
 
         searchEditText.addTextChangedListener(object : TextWatcher {
@@ -112,6 +145,30 @@ class SearchActivity : AppCompatActivity() {
             .build()
 
         api = retrofit.create(ApiService::class.java)
+
+        setupRecyclerView()
+        updateSearchHistory()
+        showHistory(false)
+
+        clearHistoryButton.setOnClickListener {
+            searchHistory.clearHistory()
+            updateSearchHistory()
+            showHistory(false)
+            searchEditText.clearFocus()
+        }
+    }
+
+    private fun setupRecyclerView() {
+        searchHistoryAdapter = TrackAdapter(emptyList()) { track ->
+            onTrackClick(track)
+        }
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = searchHistoryAdapter
+    }
+
+    private fun onTrackClick(track: Track) {
+        searchHistory.saveTrack(track)
+        updateSearchHistory()
     }
 
     private fun performSearch(query: String) {
@@ -119,7 +176,9 @@ class SearchActivity : AppCompatActivity() {
             override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
                 if (response.isSuccessful && response.body()?.resultCount ?: 0 > 0) {
                     tracks = response.body()?.results
-                    recyclerView?.adapter = TrackAdapter(tracks!!)
+                    recyclerView?.adapter = TrackAdapter(tracks!!){ track ->
+                        onTrackClick(track)
+                    }
                     clearError()
                 } else {
                     showNotFoundError()
@@ -133,6 +192,11 @@ class SearchActivity : AppCompatActivity() {
         })
     }
 
+
+    private fun updateSearchHistory() {
+        val history = searchHistory.getHistory()
+        searchHistoryAdapter.updateTracks(history)
+    }
 
 
     private fun showNotFoundError(){
@@ -153,6 +217,20 @@ class SearchActivity : AppCompatActivity() {
         errorImage.setImageResource(R.drawable.error_internet)
     }
 
+    private fun showHistory(state: Boolean) {
+        if (state) {
+            hideHistory(true)
+            setupRecyclerView()
+            updateSearchHistory()
+        } else {
+            hideHistory(false)
+            tracks?.clear()
+            recyclerView?.adapter = TrackAdapter(tracks!!){ track ->
+                onTrackClick(track)
+            }
+        }
+    }
+
     private fun clearError() {
         errorLayout.isVisible = false
         recyclerView?.isVisible = true
@@ -164,10 +242,22 @@ class SearchActivity : AppCompatActivity() {
         recyclerView?.adapter?.notifyDataSetChanged()
     }
 
+    private fun hideHistory(state: Boolean) {
+        var stateCount = state
+        if (searchHistoryAdapter.itemCount <= 0) {
+            stateCount = false
+        }
+
+        searchHistoryTitle.isVisible = stateCount
+        clearHistoryButton.isVisible = stateCount
+
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(KEY_SEARCH_TEXT, searchText)
     }
+
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)

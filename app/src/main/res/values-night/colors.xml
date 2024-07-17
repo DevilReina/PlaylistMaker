@@ -1,10 +1,10 @@
 <resources>
     <color name="primary">#FFFFFF</color>
-    <color name="secondary">#000000</color>
-    <color name="background">#000000</color>
+    <color name="secondary">#1A1B22</color>
+    <color name="background">#1A1B22</color>
     <color name="surface">#FFFFFF</color>
     <color name="searth_clr">#FFFFFF</color>
-    <color name="main_bg">#000000</color>
+    <color name="main_bg">#1A1B22</color>
     <color name="icon_back">#FFFFFF</color>
     <color name="icon">#FFFFFF</color>
     <color name="search_hint">#000000</color>

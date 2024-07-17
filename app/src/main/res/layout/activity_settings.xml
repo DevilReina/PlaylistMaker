@@ -36,28 +36,16 @@
         android:orientation="vertical"
         android:layout_marginTop="24dp">
 
-        <!-- Темная тема -->
-        <LinearLayout
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/themeSwitcher"
+            style="@style/SettingsText"
+            android:layout_gravity="start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/SettingsText"
-                android:layout_weight="1"
-                android:text="@string/dark_theme"
-                android:textColor="@color/surface"/>
-
-            <Switch
-                android:id="@+id/dark_mode_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/AppSwitchStyle"/>
-
-        </LinearLayout>
+            android:layout_weight="1"
+            android:text="@string/dark_theme"
+            android:textColor="@color/surface"/>
+        <!-- Темная тема -->
 
         <!-- Поделиться приложением -->
         <LinearLayout
