@@ -25,4 +25,7 @@
     <string name="text_error">Ничего не нашлось</string>
     <string name="internet_error">Проблемы со связью\n\n Загрузка не удалась. Проверьте подключение к интернету</string>
 
+    <string name="clear_history">Очистить историю</string>
+
+    <string name="search_history">Вы смотрели</string>
 </resources>

@@ -9,27 +9,23 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var sharedPreferences: SharedPreferences
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        sharedPreferences =
-            getSharedPreferences("com.example.playlistmaker_preferences", MODE_PRIVATE)
-        val darkModeSwitch = findViewById<Switch>(R.id.dark_mode_switch)
-        darkModeSwitch.isChecked = sharedPreferences.getBoolean("DARK_MODE", false)
 
-        darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-            sharedPreferences.edit().putBoolean("DARK_MODE", isChecked).apply()
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        val saveSwitch = (applicationContext as App)
+        themeSwitcher.isChecked = saveSwitch.darkTheme
+
+        themeSwitcher.setOnCheckedChangeListener { _, checked ->
+            (applicationContext as App).switchTheme(checked)
         }
 
         val backButton = findViewById<View>(R.id.back)
