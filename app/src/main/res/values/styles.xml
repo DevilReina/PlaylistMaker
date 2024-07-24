@@ -76,4 +76,28 @@
         <item name="textAllCaps">false</item>
         <item name="backgroundTint">@color/secondary</item>
     </style>
+
+    <style name="playerTrackName">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">@color/surface</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="playerArtistName">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">@color/surface</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="attrStyle">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/icon</item>
+    </style>
+
+    <style name="attrValue">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/surface</item>
+    </style>
 </resources>

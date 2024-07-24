@@ -24,7 +24,7 @@
         </activity>
         <activity android:name=".SettingsActivity" />
         <activity android:name=".MediaLibraryActivity" />
-
+        <activity android:name=".PlayerActivity" />
         <activity android:name=".SearchActivity"
             android:exported="true">
             <intent-filter>

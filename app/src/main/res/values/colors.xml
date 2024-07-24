@@ -2,7 +2,7 @@
     <color name="primary">#FFFFFF</color>
     <color name="secondary">#1A1B22</color>
     <color name="background">#FFFFFF</color>
-    <color name="surface">#000000</color>
+    <color name="surface">#1A1B22</color>
     <color name="searth_clr">#E6E8EB</color>
     <color name="main_bg">#4285F4</color>
     <color name="icon_back">#1A1B22</color>
