@@ -28,4 +28,11 @@
     <string name="clear_history">Очистить историю</string>
 
     <string name="search_history">Вы смотрели</string>
+
+    <string name="album_image_text">Обложка альбома</string>
+    <string name="duration">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
 </resources>
