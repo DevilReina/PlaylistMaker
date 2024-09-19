@@ -8,6 +8,7 @@ class App:Application() {
     companion object {
         private const val PREFS_NAME = "THEME_PREFS"
         private const val DARK_THEME_KEY = "DARK_THEME"
+        const val TRACK_DT = "TRACK"
     }
 
     var darkTheme = false
