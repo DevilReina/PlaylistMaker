@@ -30,7 +30,6 @@ import android.widget.ProgressBar
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
-    private lateinit var hintMessage: TextView
     private lateinit var clearButton: ImageButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var errorImage: ImageView
@@ -95,13 +94,11 @@ class SearchActivity : AppCompatActivity() {
         retryButton = findViewById(R.id.retryButton)
         recyclerView = findViewById(R.id.recyclerView)
         searchEditText = findViewById(R.id.searchEditText)
-        hintMessage = findViewById(R.id.searchHint)
         searchHistoryTitle = findViewById(R.id.searchHistoryTitle)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
         progressBar = findViewById(R.id.progressBar)
 
         searchEditText.setOnFocusChangeListener { view, hasFocus ->
-            hintMessage.visibility = if (hasFocus && searchEditText.text.isEmpty()) View.VISIBLE else View.GONE
             val historyState = hasFocus && searchEditText.text.isEmpty()
             showHistory(historyState)
         }
@@ -111,7 +108,6 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                hintMessage.visibility = if (searchEditText.hasFocus() && p0?.isEmpty() == true) View.VISIBLE else View.GONE
                 val historyState = searchEditText.hasFocus() && searchEditText.text.isEmpty()
                 showHistory(historyState)
                 searchDebounce()

@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="?attr/colorOnPrimary"
-            android:drawableStart="@drawable/ic_search"
+            android:drawableStart="@drawable/ic_search_hint"
             android:drawablePadding="@dimen/dp_8"
             android:hint="@string/search"
             android:imeOptions="actionDone"
@@ -74,20 +74,6 @@
 
 
     </FrameLayout>
-
-    <TextView
-        android:id="@+id/searchHint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_24"
-        android:layout_marginRight="@dimen/dp_24"
-        android:background="@color/primary"
-        android:padding="@dimen/dp_8"
-        android:layout_marginTop="@dimen/dp_8"
-        android:text="Вводите название на английском языке"
-        android:textAlignment="center"
-        android:textColor="@color/secondary"
-        android:visibility="gone" />
 
 
     <TextView
