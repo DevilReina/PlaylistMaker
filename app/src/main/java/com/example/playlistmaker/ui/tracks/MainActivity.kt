@@ -1,10 +1,14 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.tracks
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.example.playlistmaker.ui.MediaLibraryActivity
+import com.example.playlistmaker.R
+import com.example.playlistmaker.ui.SearchActivity
+import com.example.playlistmaker.ui.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
 

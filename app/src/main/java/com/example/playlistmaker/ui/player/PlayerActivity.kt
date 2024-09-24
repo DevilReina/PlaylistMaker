@@ -1,11 +1,10 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.player
 
 import android.icu.text.SimpleDateFormat
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -15,7 +14,9 @@ import com.example.playlistmaker.App.Companion.TRACK_DT
 import com.google.gson.Gson
 import java.util.Locale
 import android.os.Handler
-
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.dpToPx
 
 
 class PlayerActivity : AppCompatActivity() {

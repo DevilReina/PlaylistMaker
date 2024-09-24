@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -27,6 +27,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 import android.os.Handler
 import android.os.Looper
 import android.widget.ProgressBar
+import com.example.playlistmaker.App
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.dto.TracksResponse
+import com.example.playlistmaker.data.network.ApiService
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.tracks.TrackAdapter
+import com.example.playlistmaker.ui.player.PlayerActivity
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
@@ -208,8 +215,8 @@ class SearchActivity : AppCompatActivity() {
     private fun performSearch(query: String) {
         if (query.isNotEmpty()) {
             progressBar.visibility = View.VISIBLE
-            api.searchTracks(query).enqueue(object : Callback<TrackResponse> {
-                override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
+            api.searchTracks(query).enqueue(object : Callback<TracksResponse> {
+                override fun onResponse(call: Call<TracksResponse>, response: Response<TracksResponse>) {
                     progressBar.visibility = View.GONE
                     if (response.isSuccessful && response.body()?.resultCount ?: 0 > 0) {
                         tracks = response.body()?.results
@@ -222,7 +229,7 @@ class SearchActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
                     progressBar.visibility = View.GONE
                     showNetworkError()
                 }

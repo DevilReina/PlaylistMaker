@@ -1,14 +1,12 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.App
+import com.example.playlistmaker.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
