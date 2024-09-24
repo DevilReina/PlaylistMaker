@@ -1,7 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorSecondary">@color/secondary</item>
         <item name="colorSurface">@color/surface</item>
@@ -9,7 +7,10 @@
         <item name="colorOnSecondary">@color/main_bg</item>
         <item name="colorOnPrimary">@color/searth_clr</item>
 
-
         <item name="colorControlNormal">@color/navigation_icon_color_night</item>
+
+        <!-- Цвета статус-бара -->
+        <item name="android:statusBarColor">@color/statusBarColorDark</item>
+        <item name="android:windowLightStatusBar">false</item> <!-- Включает темный статус-бар -->
     </style>
 </resources>

@@ -24,10 +24,12 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import android.os.Handler
+import android.os.Looper
+import android.widget.ProgressBar
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
-    private lateinit var hintMessage: TextView
     private lateinit var clearButton: ImageButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var errorImage: ImageView
@@ -38,7 +40,11 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistoryTitle: TextView
     private lateinit var clearHistoryButton: TextView
     private lateinit var searchHistoryAdapter: TrackAdapter
+    private lateinit var progressBar: ProgressBar
+
+
     private val emptyList: MutableList<Track> = mutableListOf()
+
 
     private var tracks: MutableList<Track>? = mutableListOf()
     private var searchText: String = ""
@@ -46,9 +52,32 @@ class SearchActivity : AppCompatActivity() {
     private val BASE_URL = "https://itunes.apple.com"
     private lateinit var api: ApiService
 
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { performSearch(searchText) }
+
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+
+    private var isClickAllowed = true
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
 
         searchHistory = SearchHistory(getSharedPreferences("SEARCH_PREFS", MODE_PRIVATE))
 
@@ -64,14 +93,12 @@ class SearchActivity : AppCompatActivity() {
         errorLayout = findViewById(R.id.errorLayout)
         retryButton = findViewById(R.id.retryButton)
         recyclerView = findViewById(R.id.recyclerView)
-
         searchEditText = findViewById(R.id.searchEditText)
-        hintMessage = findViewById(R.id.searchHint)
         searchHistoryTitle = findViewById(R.id.searchHistoryTitle)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
+        progressBar = findViewById(R.id.progressBar)
 
         searchEditText.setOnFocusChangeListener { view, hasFocus ->
-            hintMessage.visibility = if (hasFocus && searchEditText.text.isEmpty()) View.VISIBLE else View.GONE
             val historyState = hasFocus && searchEditText.text.isEmpty()
             showHistory(historyState)
         }
@@ -81,9 +108,9 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                hintMessage.visibility = if (searchEditText.hasFocus() && p0?.isEmpty() == true) View.VISIBLE else View.GONE
                 val historyState = searchEditText.hasFocus() && searchEditText.text.isEmpty()
                 showHistory(historyState)
+                searchDebounce()
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -162,6 +189,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         searchHistoryAdapter = TrackAdapter(emptyList()) { track ->
+            clickDebounce()
             onTrackClick(track)
         }
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -178,24 +206,28 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun performSearch(query: String) {
-        api.searchTracks(query).enqueue(object : Callback<TrackResponse> {
-            override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
-                if (response.isSuccessful && response.body()?.resultCount ?: 0 > 0) {
-                    tracks = response.body()?.results
-                    recyclerView?.adapter = TrackAdapter(tracks!!){ track ->
-                        onTrackClick(track)
+        if (query.isNotEmpty()) {
+            progressBar.visibility = View.VISIBLE
+            api.searchTracks(query).enqueue(object : Callback<TrackResponse> {
+                override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
+                    progressBar.visibility = View.GONE
+                    if (response.isSuccessful && response.body()?.resultCount ?: 0 > 0) {
+                        tracks = response.body()?.results
+                        recyclerView.adapter = TrackAdapter(tracks!!){ track ->
+                            onTrackClick(track)
+                        }
+                        clearError()
+                    } else {
+                        showNotFoundError()
                     }
-                    clearError()
-                } else {
-                    showNotFoundError()
-
                 }
-            }
 
-            override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                showNetworkError()
-            }
-        })
+                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    progressBar.visibility = View.GONE
+                    showNetworkError()
+                }
+            })
+        }
     }
 
 
@@ -274,6 +306,9 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         private const val KEY_SEARCH_TEXT = "SEARCH_TEXT"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+
     }
 
 }

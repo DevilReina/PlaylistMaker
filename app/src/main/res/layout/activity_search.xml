@@ -10,6 +10,7 @@
     tools:context=".SearchActivity">
 
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -41,13 +42,15 @@
         android:background="@drawable/corner_input"
         android:paddingEnd="10dp">
 
+
+
         <EditText
             android:id="@+id/searchEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="?attr/colorOnPrimary"
-            android:drawableStart="@drawable/ic_search"
+            android:drawableStart="@drawable/ic_search_hint"
             android:drawablePadding="@dimen/dp_8"
             android:hint="@string/search"
             android:imeOptions="actionDone"
@@ -72,20 +75,6 @@
 
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/searchHint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_24"
-        android:layout_marginRight="@dimen/dp_24"
-        android:background="@color/primary"
-        android:padding="@dimen/dp_8"
-        android:layout_marginTop="@dimen/dp_8"
-        android:text="Вводите название на английском языке"
-        android:textAlignment="center"
-        android:textColor="@color/secondary"
-        android:visibility="gone" />
-
 
     <TextView
         android:id="@+id/searchHistoryTitle"
@@ -104,6 +93,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <ProgressBar android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="248dp"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/circular"
+            android:visibility="gone"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -125,6 +120,7 @@
             android:visibility="gone"
             app:cornerRadius="54dp"
             />
+
     </LinearLayout>
 
     <LinearLayout

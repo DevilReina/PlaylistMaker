@@ -9,10 +9,21 @@
     <color name="icon">#AEAFB4</color>
     <color name="search_hint">#AAAAAA</color>
     <color name="text_clr">#FFFFFF</color>
+    <color name="circular">#3772E7</color>
+    <color name="ic_srh_clr">#AEAFB4</color>
+
 
 
     <color name="switch_thumb_color_light">#FF6200EE</color>
     <color name="switch_thumb_color_dark">#FF6200EE</color>
     <color name="switch_track_color_light">#FFC7C7C7</color>
     <color name="switch_track_color_dark">#FFB0B0B0</color>
+
+    <color name="statusBarColorMain">#4285F4</color>
+    <color name="statusBarColorLight">#FFFFFF</color> <!-- Цвет фона статус-бара для светлой темы -->
+    <color name="statusBarColorDark">#1A1B22</color>  <!-- Цвет фона статус-бара для темной темы -->
+    <color name="statusBarTextColorLight">#1A1B22</color> <!-- Цвет текста статус-бара для светлой темы -->
+    <color name="statusBarTextColorDark">#FFFFFF</color>  <!-- Цвет текста статус-бара для темной темы -->
+
+
 </resources>
