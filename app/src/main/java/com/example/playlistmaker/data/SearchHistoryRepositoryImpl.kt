@@ -1,11 +1,11 @@
-package com.example.playlistmaker.ui
+package com.example.playlistmaker.data
 
 import android.content.SharedPreferences
+import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 
-
-class SearchHistory(private val sharedPreferences: SharedPreferences) {
+class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferences) : SearchHistoryRepository {
 
     companion object {
         private const val SEARCH_HISTORY_KEY = "SEARCH_HISTORY"
@@ -14,7 +14,7 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
 
     private val gson = Gson()
 
-    fun saveTrack(track: Track) {
+    override fun saveTrack(track: Track) {
         val history = getHistory().toMutableList()
         history.remove(track)
         history.add(0, track)
@@ -24,12 +24,12 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
         saveHistory(history)
     }
 
-    fun getHistory(): List<Track> {
+    override fun getHistory(): List<Track> {
         val json = sharedPreferences.getString(SEARCH_HISTORY_KEY, null) ?: return emptyList()
         return gson.fromJson(json, Array<Track>::class.java).toList()
     }
 
-    fun clearHistory() {
+    override fun clearHistory() {
         sharedPreferences.edit().remove(SEARCH_HISTORY_KEY).apply()
     }
 

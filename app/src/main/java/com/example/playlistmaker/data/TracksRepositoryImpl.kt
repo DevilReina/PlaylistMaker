@@ -4,13 +4,15 @@ import com.example.playlistmaker.data.dto.TracksRequest
 import com.example.playlistmaker.data.dto.TracksResponse
 import com.example.playlistmaker.domain.api.TracksRepository
 import com.example.playlistmaker.domain.models.Track
+import java.io.IOException
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
 
     override fun searchTracks(expression: String): List<Track> {
         val response = networkClient.doRequest(TracksRequest(expression))
-        if (response.resultCode == 200) {
-            return (response as TracksResponse).results.map {
+
+        return if (response.resultCode == 200) {
+            (response as TracksResponse).results.map {
                 Track(
                     it.trackName,
                     it.artistName,
@@ -23,8 +25,11 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                     it.previewUrl
                 )
             }
+        } else if (response.resultCode == 500) {
+            // Ошибка сети
+            throw IOException("Network Error")
         } else {
-            return emptyList()
+            emptyList() // Другие ошибки
         }
     }
 }

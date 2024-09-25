@@ -5,6 +5,7 @@ import com.example.playlistmaker.data.dto.Response
 import com.example.playlistmaker.data.dto.TracksRequest
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 
 class RetrofitNetworkClient: NetworkClient
 {
@@ -18,14 +19,18 @@ class RetrofitNetworkClient: NetworkClient
     private val iTunesService = retrofit.create(ApiService::class.java)
 
     override fun doRequest(dto: Any): Response {
-        if (dto is TracksRequest) {
-            val resp = iTunesService.searchTracks(dto.expression).execute()
+        return try {
+            if (dto is TracksRequest) {
+                val resp = iTunesService.searchTracks(dto.expression).execute()
 
-            val body = resp.body() ?: Response()
-
-            return body.apply { resultCode = resp.code() }
-        } else {
-            return Response().apply { resultCode = 400 }
+                val body = resp.body() ?: Response()
+                body.apply { resultCode = resp.code() }
+            } else {
+                Response().apply { resultCode = 400 }
+            }
+        } catch (e: IOException) {
+            // Ошибка сети или отсутствие подключения
+            Response().apply { resultCode = 500 }
         }
     }
 }
