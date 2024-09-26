@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui
+package com.example.playlistmaker.presentation.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -27,7 +27,7 @@ import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.ui.tracks.TrackAdapter
+import com.example.playlistmaker.presentation.adapters.TrackAdapter
 import com.example.playlistmaker.ui.player.PlayerActivity
 import java.io.IOException
 
@@ -208,18 +208,17 @@ class SearchActivity : AppCompatActivity() {
         if (query.isNotEmpty()) {
             // Скрываем сообщение об ошибке перед новым поиском
             errorLayout.isVisible = false // Скрываем сообщение об ошибке "Ничего не найдено"
-            recyclerView?.isVisible = true // Показываем RecyclerView
-
-            // Показываем прогресс-бар
-            progressBar.visibility = View.VISIBLE
+            recyclerView.isVisible = false // Скрываем RecyclerView
+            progressBar.isVisible = true// Показываем прогресс-бар
 
             // Вызов интерактора для поиска треков
             tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
                 override fun consume(foundTracks: List<Track>) {
                     // Убеждаемся, что UI обновляется на главном (основном) потоке
                     runOnUiThread {
-                        progressBar.visibility = View.GONE // Прячем прогресс-бар
+                        progressBar.isVisible = false // Прячем прогресс-бар
                         if (foundTracks.isNotEmpty()) {
+                            recyclerView.isVisible = true
                             updateTracks(foundTracks) // Обновляем RecyclerView с результатами
                         } else {
                             showNotFoundError() // Показываем ошибку "не найдено"
@@ -229,7 +228,7 @@ class SearchActivity : AppCompatActivity() {
             }) { throwable ->
                 // Обработка ошибки (например, отсутствие интернета)
                 runOnUiThread {
-                    progressBar.visibility = View.GONE
+                    progressBar.isVisible =false
                     if (throwable is IOException) {
                         showNetworkError() // Показываем ошибку сети
                     } else {
@@ -263,7 +262,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showNotFoundError(){
         errorLayout.isVisible = true
-        recyclerView?.isVisible = false
+        recyclerView.isVisible = false
         clearAdapter()
         retryButton.isVisible = false
         errorText.setText(R.string.text_error)
@@ -272,7 +271,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showNetworkError(){
         errorLayout.isVisible = true
-        recyclerView?.isVisible = false
+        recyclerView.isVisible = false
         clearAdapter()
         retryButton.isVisible = true
         errorText.setText(R.string.internet_error)
@@ -287,7 +286,7 @@ class SearchActivity : AppCompatActivity() {
         } else {
             hideHistory(false)
             tracks?.clear()
-            recyclerView?.adapter = TrackAdapter(tracks!!){ track ->
+            recyclerView.adapter = TrackAdapter(tracks!!){ track ->
                 onTrackClick(track)
             }
         }
@@ -297,7 +296,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clearError() {
         errorLayout.isVisible = false
-        recyclerView?.isVisible = true
+        recyclerView.isVisible = true
     }
 
     @SuppressLint("NotifyDataSetChanged")

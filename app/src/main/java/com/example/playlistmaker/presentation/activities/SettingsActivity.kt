@@ -1,11 +1,11 @@
-package com.example.playlistmaker.ui
+package com.example.playlistmaker.presentation.activities
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.App
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.SettingsInteractor
@@ -14,30 +14,29 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var settingsInteractor: SettingsInteractor
+    private var isDarkThemeEnabled: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val backButton = findViewById<View>(R.id.back)
-        backButton.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed() // Закрываем активность по нажатию на "Назад"
-        }
-        // Получаем интерактор с передачей контекста
-        settingsInteractor = Creator.provideSettingsInteractor(applicationContext)
+        // Получаем интерактор для работы с темой
+        settingsInteractor = Creator.provideSettingsInteractor()
 
-        // Инициализация переключателя темы
+        // Получаем текущее состояние темы
+        isDarkThemeEnabled = settingsInteractor.isDarkThemeEnabled()
+
+        // Свитчер темы
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
-        themeSwitcher.isChecked = settingsInteractor.isDarkThemeEnabled()
+        themeSwitcher.isChecked = isDarkThemeEnabled
 
-
+        // Обработчик переключения темы
         themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
-            // Сохраняем состояние темы
-            settingsInteractor.switchTheme(isChecked)
-
-            // Перезапускаем активность для применения темы
-            recreate() // перезапуск SettingsActivity с новой темой
-
+            if (isChecked != isDarkThemeEnabled) {
+                isDarkThemeEnabled = isChecked
+                settingsInteractor.switchTheme(isChecked)
+                switchTheme(isChecked) // Меняем тему
+            }
         }
 
             val shareButton = findViewById<View>(R.id.share_app_button)
@@ -74,5 +73,18 @@ class SettingsActivity : AppCompatActivity() {
                 )
             }
 
+        val backButton = findViewById<View>(R.id.back)
+        backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed() // Закрываем активность по нажатию на "Назад"
+        }
+    }
+    private fun switchTheme(isDarkTheme: Boolean) {
+        AppCompatDelegate.setDefaultNightMode(
+            if (isDarkTheme) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+        )
     }
 }

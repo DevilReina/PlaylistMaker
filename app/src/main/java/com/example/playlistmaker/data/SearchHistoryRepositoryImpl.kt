@@ -7,11 +7,6 @@ import com.google.gson.Gson
 
 class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferences) : SearchHistoryRepository {
 
-    companion object {
-        private const val SEARCH_HISTORY_KEY = "SEARCH_HISTORY"
-        private const val MAX_HISTORY_SIZE = 10
-    }
-
     private val gson = Gson()
 
     override fun saveTrack(track: Track) {
@@ -36,5 +31,9 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
     private fun saveHistory(history: List<Track>) {
         val json = gson.toJson(history)
         sharedPreferences.edit().putString(SEARCH_HISTORY_KEY, json).apply()
+    }
+    companion object {
+        private const val SEARCH_HISTORY_KEY = "SEARCH_HISTORY"
+        private const val MAX_HISTORY_SIZE = 10
     }
 }

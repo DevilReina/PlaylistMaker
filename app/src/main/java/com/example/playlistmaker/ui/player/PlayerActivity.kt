@@ -1,7 +1,6 @@
 package com.example.playlistmaker.ui.player
 
 import android.icu.text.SimpleDateFormat
-import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
@@ -14,9 +13,11 @@ import com.example.playlistmaker.App.Companion.TRACK_DT
 import com.google.gson.Gson
 import java.util.Locale
 import android.os.Handler
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.dpToPx
+import com.example.playlistmaker.utils.dpToPx
 
 
 class PlayerActivity : AppCompatActivity() {
@@ -35,23 +36,17 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var buttonAdd: ImageView
     private lateinit var buttonLike: ImageView
     private lateinit var buttonPlay: ImageView
-    private var mediaPlayer = MediaPlayer()
 
+    // Используем PlayerInteractor вместо прямого MediaPlayer
+    private val playerInteractor: PlayerInteractor = Creator.providePlayerInteractor()
 
-    private companion object {
-        const val STATE_DEFAULT = 0
-        const val STATE_PREPARED = 1
-        const val STATE_PLAYING = 2
-        const val STATE_PAUSED = 3
-        const val DELAY = 300L
-    }
 
     private var playerState = STATE_DEFAULT
     private val handler = Handler(Looper.getMainLooper())
     private val updateTimeRunnable = object : Runnable {
         override fun run() {
             if (playerState == STATE_PLAYING) {
-                val currentPosition = mediaPlayer.currentPosition
+                val currentPosition = playerInteractor.getCurrentPosition()
                 durationTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(currentPosition)
                 handler.postDelayed(this, DELAY)
             }
@@ -77,8 +72,6 @@ class PlayerActivity : AppCompatActivity() {
         buttonLike = findViewById(R.id.likeButton)
         buttonPlay = findViewById(R.id.playButton)
 
-
-
         backButton.setOnClickListener{
             finish()
         }
@@ -103,7 +96,7 @@ class PlayerActivity : AppCompatActivity() {
         trackName.text = track.trackName
         artistName.text = track.artistName
 
-        if (track.collectionName.isNullOrEmpty()) {
+        if (track.collectionName.isEmpty()) {
             albumAttr.isVisible = false
             albumValue.isVisible = false
         } else {
@@ -126,7 +119,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        playerInteractor.releasePlayer()
     }
 
     private fun playbackControl() {
@@ -142,33 +135,36 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun preparePlayer(url: String?) {
         if (url != null) {
-            mediaPlayer.setDataSource(url)
-            mediaPlayer.prepareAsync()
-            mediaPlayer.setOnPreparedListener {
+            playerInteractor.preparePlayer(url, onReady = {
                 buttonPlay.isEnabled = true
                 playerState = STATE_PREPARED
-            }
-            mediaPlayer.setOnCompletionListener {
+            }, onComplete = {
                 playerState = STATE_PREPARED
                 handler.removeCallbacks(updateTimeRunnable)
                 durationTime.text = "00:00"
-                buttonPlay.setImageResource(R.drawable.play_button) // Возвращаем кнопку в состояние "Играть"
-            }
+                buttonPlay.setImageResource(R.drawable.play_button)
+            })
         } else {
-            // Обработка случая, если previewUrl недоступен
             buttonPlay.isEnabled = false
         }
     }
     private fun startPlayer() {
-        mediaPlayer.start()
+        playerInteractor.startPlayer()
         playerState = STATE_PLAYING
         buttonPlay.setImageResource(R.drawable.pause_button)
         handler.post(updateTimeRunnable)
     }
 
     private fun pausePlayer() {
-        mediaPlayer.pause()
+        playerInteractor.pausePlayer()
         playerState = STATE_PAUSED
         buttonPlay.setImageResource(R.drawable.play_button)
+    }
+    private companion object {
+        const val STATE_DEFAULT = 0
+        const val STATE_PREPARED = 1
+        const val STATE_PLAYING = 2
+        const val STATE_PAUSED = 3
+        const val DELAY = 300L
     }
 }

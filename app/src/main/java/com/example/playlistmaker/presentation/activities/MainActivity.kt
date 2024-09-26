@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.tracks
+package com.example.playlistmaker.presentation.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,17 +6,14 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.Creator
-import com.example.playlistmaker.ui.MediaLibraryActivity
 import com.example.playlistmaker.R
-import com.example.playlistmaker.ui.SearchActivity
-import com.example.playlistmaker.ui.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Применяем тему перед созданием активности
-        val settingsInteractor = Creator.provideSettingsInteractor(applicationContext)
+        val settingsInteractor = Creator.provideSettingsInteractor()
         val isDarkThemeEnabled = settingsInteractor.isDarkThemeEnabled()
         settingsInteractor.switchTheme(isDarkThemeEnabled)
 

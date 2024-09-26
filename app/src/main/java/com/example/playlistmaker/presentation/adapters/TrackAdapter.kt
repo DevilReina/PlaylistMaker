@@ -1,10 +1,12 @@
-package com.example.playlistmaker.ui.tracks
+package com.example.playlistmaker.presentation.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.tracks.TrackViewHolder
 
 class TrackAdapter(
     private var tracks: List<Track>,
@@ -28,6 +30,7 @@ class TrackAdapter(
         return tracks.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateTracks(newTracks: List<Track>) {
         tracks = newTracks
         notifyDataSetChanged()
