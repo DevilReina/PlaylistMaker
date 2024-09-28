@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -19,14 +19,17 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import android.os.Handler
 import android.os.Looper
 import android.widget.ProgressBar
+import com.example.playlistmaker.App
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.TracksInteractor
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.adapters.TrackAdapter
+import com.example.playlistmaker.ui.player.PlayerActivity
+import java.io.IOException
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
@@ -36,25 +39,21 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var errorText: TextView
     private lateinit var errorLayout: LinearLayout
     private lateinit var retryButton: TextView
-    private lateinit var searchHistory: SearchHistory
     private lateinit var searchHistoryTitle: TextView
     private lateinit var clearHistoryButton: TextView
     private lateinit var searchHistoryAdapter: TrackAdapter
     private lateinit var progressBar: ProgressBar
-
-
-    private val emptyList: MutableList<Track> = mutableListOf()
+    private val tracksInteractor = Creator.provideTracksInteractor()
+    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
 
 
     private var tracks: MutableList<Track>? = mutableListOf()
     private var searchText: String = ""
 
-    private val BASE_URL = "https://itunes.apple.com"
-    private lateinit var api: ApiService
-
 
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { performSearch(searchText) }
+
 
 
     private fun searchDebounce() {
@@ -78,14 +77,10 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-
-        searchHistory = SearchHistory(getSharedPreferences("SEARCH_PREFS", MODE_PRIVATE))
-
         val backButton = findViewById<View>(R.id.back)
         backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
-
 
         clearButton = findViewById(R.id.clearButton)
         errorImage = findViewById(R.id.errorImage)
@@ -164,27 +159,31 @@ class SearchActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         retryButton.setOnClickListener {
-            performSearch(searchEditText.text.toString())
+            // Скрываем сообщение об ошибке перед новым поиском
+            errorLayout.isVisible = false
+            recyclerView?.isVisible = true
+
+            // Проверяем, что поле поиска не пустое, перед запуском поиска
+            val query = searchEditText.text.toString()
+            if (query.isNotEmpty()) {
+                performSearch(query) // Выполняем повторный поиск
+            }
         }
-
-        // Инициализация Retrofit
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        api = retrofit.create(ApiService::class.java)
 
         setupRecyclerView()
         updateSearchHistory()
         showHistory(false)
 
         clearHistoryButton.setOnClickListener {
-            searchHistory.clearHistory()
-            updateSearchHistory()
-            showHistory(false)
-            searchEditText.clearFocus()
+            // Очищаем историю через интерактор
+            clearHistory()
+
+            // Обновляем интерфейс
+            updateSearchHistory() // Перерисовываем список истории
+            showHistory(false) // Прячем историю после её очистки
+            searchEditText.clearFocus() // Убираем фокус с поля ввода
         }
+
     }
 
     private fun setupRecyclerView() {
@@ -197,7 +196,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun onTrackClick(track: Track) {
-        searchHistory.saveTrack(track)
+        saveTrackToHistory(track)// Сохраняем трек в истории через интерактор
         updateSearchHistory()
 
         val intent = Intent(this, PlayerActivity::class.java)
@@ -207,39 +206,63 @@ class SearchActivity : AppCompatActivity() {
 
     private fun performSearch(query: String) {
         if (query.isNotEmpty()) {
-            progressBar.visibility = View.VISIBLE
-            api.searchTracks(query).enqueue(object : Callback<TrackResponse> {
-                override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
-                    progressBar.visibility = View.GONE
-                    if (response.isSuccessful && response.body()?.resultCount ?: 0 > 0) {
-                        tracks = response.body()?.results
-                        recyclerView.adapter = TrackAdapter(tracks!!){ track ->
-                            onTrackClick(track)
+            // Скрываем сообщение об ошибке перед новым поиском
+            errorLayout.isVisible = false // Скрываем сообщение об ошибке "Ничего не найдено"
+            recyclerView.isVisible = false // Скрываем RecyclerView
+            progressBar.isVisible = true// Показываем прогресс-бар
+
+            // Вызов интерактора для поиска треков
+            tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
+                override fun consume(foundTracks: List<Track>) {
+                    // Убеждаемся, что UI обновляется на главном (основном) потоке
+                    runOnUiThread {
+                        progressBar.isVisible = false // Прячем прогресс-бар
+                        if (foundTracks.isNotEmpty()) {
+                            recyclerView.isVisible = true
+                            updateTracks(foundTracks) // Обновляем RecyclerView с результатами
+                        } else {
+                            showNotFoundError() // Показываем ошибку "не найдено"
                         }
-                        clearError()
-                    } else {
-                        showNotFoundError()
                     }
                 }
-
-                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    progressBar.visibility = View.GONE
-                    showNetworkError()
+            }) { throwable ->
+                // Обработка ошибки (например, отсутствие интернета)
+                runOnUiThread {
+                    progressBar.isVisible =false
+                    if (throwable is IOException) {
+                        showNetworkError() // Показываем ошибку сети
+                    } else {
+                        showNotFoundError() // Если это другая ошибка
+                    }
                 }
-            })
+            }
+        }
+    }
+
+    private fun updateTracks(foundTracks: List<Track>) {
+        tracks = foundTracks.toMutableList()
+        recyclerView.adapter = TrackAdapter(tracks!!) { track ->
+            onTrackClick(track)
         }
     }
 
 
     private fun updateSearchHistory() {
-        val history = searchHistory.getHistory()
+        val history = searchHistoryInteractor.getHistory()
         searchHistoryAdapter.updateTracks(history)
     }
-
+    private fun saveTrackToHistory(track: Track) {
+        searchHistoryInteractor.saveTrack(track)
+        updateSearchHistory()
+    }
+    private fun clearHistory() {
+        searchHistoryInteractor.clearHistory()
+        updateSearchHistory()
+    }
 
     private fun showNotFoundError(){
         errorLayout.isVisible = true
-        recyclerView?.isVisible = false
+        recyclerView.isVisible = false
         clearAdapter()
         retryButton.isVisible = false
         errorText.setText(R.string.text_error)
@@ -248,7 +271,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showNetworkError(){
         errorLayout.isVisible = true
-        recyclerView?.isVisible = false
+        recyclerView.isVisible = false
         clearAdapter()
         retryButton.isVisible = true
         errorText.setText(R.string.internet_error)
@@ -263,15 +286,17 @@ class SearchActivity : AppCompatActivity() {
         } else {
             hideHistory(false)
             tracks?.clear()
-            recyclerView?.adapter = TrackAdapter(tracks!!){ track ->
+            recyclerView.adapter = TrackAdapter(tracks!!){ track ->
                 onTrackClick(track)
             }
         }
     }
 
+
+
     private fun clearError() {
         errorLayout.isVisible = false
-        recyclerView?.isVisible = true
+        recyclerView.isVisible = true
     }
 
     @SuppressLint("NotifyDataSetChanged")

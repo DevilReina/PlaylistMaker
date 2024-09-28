@@ -1,45 +1,40 @@
 package com.example.playlistmaker
 
 import android.app.Application
+import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.data.SettingsRepositoryImpl
 
 class App:Application() {
 
-    companion object {
-        private const val PREFS_NAME = "THEME_PREFS"
-        private const val DARK_THEME_KEY = "DARK_THEME"
-        const val TRACK_DT = "TRACK"
-    }
-
-    var darkTheme = false
-
     override fun onCreate() {
         super.onCreate()
-        darkTheme = loadTheme()
-        switchTheme(darkTheme)
+        instance = this
+
+        // Применяем тему при запуске приложения
+        applySavedTheme()
     }
 
-    fun switchTheme(darkThemeEnabled: Boolean) {
-        darkTheme = darkThemeEnabled
+    private fun applySavedTheme() {
+        val themeRepository = SettingsRepositoryImpl(this)
+        val isDarkTheme = themeRepository.isDarkThemeEnabled()
+
         AppCompatDelegate.setDefaultNightMode(
-            if (darkThemeEnabled) {
+            if (isDarkTheme) {
                 AppCompatDelegate.MODE_NIGHT_YES
             } else {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-        saveTheme(darkThemeEnabled)
     }
 
-    private fun loadTheme(): Boolean {
-        val sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        return sharedPreferences.getBoolean(DARK_THEME_KEY, false)
-    }
-
-    private fun saveTheme(darkThemeEnabled: Boolean) {
-        val sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        sharedPreferences.edit()
-            .putBoolean(DARK_THEME_KEY, darkThemeEnabled)
-            .apply()
+    companion object {
+        const val TRACK_DT = "TRACK"
+        lateinit var instance: App
+            private set
+        // Метод для получения Application Context
+        fun getAppContext(): Context {
+            return instance.applicationContext
+        }
     }
 }
