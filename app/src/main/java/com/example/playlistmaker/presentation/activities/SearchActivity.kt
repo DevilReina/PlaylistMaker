@@ -23,7 +23,7 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.ProgressBar
 import com.example.playlistmaker.App
-import com.example.playlistmaker.Creator
+import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.models.Track
@@ -93,7 +93,7 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
         progressBar = findViewById(R.id.progressBar)
 
-        searchEditText.setOnFocusChangeListener { view, hasFocus ->
+        searchEditText.setOnFocusChangeListener { _, hasFocus ->
             val historyState = hasFocus && searchEditText.text.isEmpty()
             showHistory(historyState)
         }

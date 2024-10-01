@@ -1,8 +1,7 @@
-package com.example.playlistmaker.data
+package com.example.playlistmaker.settings.data
 
 import android.content.Context
-import android.content.SharedPreferences
-import com.example.playlistmaker.domain.api.SettingsRepository
+import com.example.playlistmaker.settings.domain.api.SettingsRepository
 
 class SettingsRepositoryImpl(private val context: Context) : SettingsRepository {
 

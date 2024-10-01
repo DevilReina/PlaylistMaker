@@ -25,7 +25,7 @@
 
         <!-- Остальные активности используют основную тему -->
         <activity
-            android:name=".presentation.activities.SettingsActivity"
+            android:name=".settings.ui.SettingsActivity"
             android:theme="@style/Theme.PlaylistMaker"
             android:exported="true" />
 

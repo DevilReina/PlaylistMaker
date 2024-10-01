@@ -5,8 +5,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.Creator
+import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
+import com.example.playlistmaker.settings.ui.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
 
