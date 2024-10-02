@@ -1,6 +1,8 @@
 package com.example.playlistmaker.settings.domain.api
 
+import com.example.playlistmaker.settings.model.ThemeSettings
+
 interface SettingsRepository {
-    fun switchTheme(isDarkTheme: Boolean)
-    fun isDarkThemeEnabled(): Boolean
+    fun getThemeSettings(): ThemeSettings
+    fun updateThemeSetting(settings: ThemeSettings)
 }

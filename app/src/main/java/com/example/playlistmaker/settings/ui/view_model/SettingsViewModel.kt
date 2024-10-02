@@ -1,88 +1,70 @@
 package com.example.playlistmaker.settings.ui.view_model
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatDelegate
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.settings.domain.api.SettingsInteractor
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.policy.domain.PolicyInteractor
+import com.example.playlistmaker.settings.domain.api.SettingsInteractor
+import com.example.playlistmaker.settings.model.ThemeSettings
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
-import com.example.playlistmaker.support.domain.SupportInteractor
 
 class SettingsViewModel(
-    private val settingsInteractor: SettingsInteractor,
     private val sharingInteractor: SharingInteractor,
-    private val supportInteractor: SupportInteractor,
-    private val policyInteractor: PolicyInteractor
+    private val settingsInteractor: SettingsInteractor
 ) : ViewModel() {
 
-    // LiveData для отслеживания текущей темы
-    private val _isDarkTheme = MutableLiveData<Boolean>()
-    val isDarkTheme: LiveData<Boolean> get() = _isDarkTheme
+    private val _themeChanged = MutableLiveData<Boolean>()
+    val themeChanged: LiveData<Boolean> get() = _themeChanged
 
-    private val _shareIntent = MutableLiveData<Intent>()
-    val shareIntent: LiveData<Intent> get() = _shareIntent
-
-    private val _emailIntent = MutableLiveData<Intent>()
-    val emailIntent: LiveData<Intent> get() = _emailIntent
-
-    private val _policyIntent = MutableLiveData<Intent>()
-    val policyIntent: LiveData<Intent> get() = _policyIntent
-
-    init {
-        // Инициализируем тему при создании ViewModel
-        _isDarkTheme.value = settingsInteractor.isDarkThemeEnabled()
+    // Обновление настроек темы и применение
+    fun updateThemeSettings(themeSettings: ThemeSettings) {
+        settingsInteractor.updateThemeSettings(themeSettings)
+        applyTheme(themeSettings.isDarkTheme)
     }
 
-    // Метод для переключения темы
-    fun switchTheme(isDark: Boolean) {
-        // Сохраняем тему через интерактор
-        settingsInteractor.switchTheme(isDark)
-
-        // Переключаем тему с помощью AppCompatDelegate
+    // Применение темы через ViewModel
+    private fun applyTheme(isDarkTheme: Boolean) {
         AppCompatDelegate.setDefaultNightMode(
-            if (isDark) {
+            if (isDarkTheme) {
                 AppCompatDelegate.MODE_NIGHT_YES
             } else {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-        // Обновляем LiveData
-        _isDarkTheme.value = isDark
+        _themeChanged.postValue(isDarkTheme)
     }
 
-    //метод шаринга
-    fun shareApp(shareMessage: String) {
-        val intent = sharingInteractor.createShareIntent(shareMessage)
-        _shareIntent.value = intent
+    // Шаринг приложения
+    fun shareApp() {
+        sharingInteractor.shareApp()
     }
 
-    // Метод для отправки email
-    fun sendSupportEmail(email: String, subject: String, body: String) {
-        _emailIntent.value = supportInteractor.createSupportEmailIntent(email, subject, body)
+    // Открытие пользовательских соглашений
+    fun openTerms() {
+        sharingInteractor.openTerms()
     }
 
-    // Метод для открытия политики конфиденциальности
-    fun openPolicy(url: String) {
-        _policyIntent.value = policyInteractor.createPolicyIntent(url)
+    // Открытие поддержки
+    fun openSupport() {
+        sharingInteractor.openSupport()
+    }
+
+    // Получение текущих настроек темы
+    fun getThemeSettings(): ThemeSettings {
+        return settingsInteractor.getThemeSettings()
     }
 
     companion object {
-        fun provideFactory(): ViewModelProvider.Factory = viewModelFactory {
+        fun provideFactory(context: Context): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                // Получаем SettingsInteractor через Creator
+                val sharingInteractor = Creator.provideSharingInteractor(context)
                 val settingsInteractor = Creator.provideSettingsInteractor()
-                val sharingInteractor = Creator.provideSharingInteractor()
-                val supportInteractor = Creator.provideSupportInteractor()
-                val policyInteractor = Creator.providePolicyInteractor()
-
-                // Возвращаем новую инстанцию ViewModel
-                SettingsViewModel(settingsInteractor, sharingInteractor, supportInteractor, policyInteractor)
+                SettingsViewModel(sharingInteractor, settingsInteractor)
             }
         }
     }

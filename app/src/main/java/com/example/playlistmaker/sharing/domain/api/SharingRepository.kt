@@ -1,7 +1,9 @@
 package com.example.playlistmaker.sharing.domain.api
 
-import android.content.Intent
+import com.example.playlistmaker.sharing.model.EmailData
 
 interface SharingRepository {
-    fun createShareIntent(shareMessage: String): Intent
+    fun getShareAppLink(): String
+    fun getTermsLink(): String
+    fun getSupportEmailData(): EmailData
 }

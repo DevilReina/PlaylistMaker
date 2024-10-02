@@ -13,11 +13,6 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Применяем тему перед созданием активности
-        val settingsInteractor = Creator.provideSettingsInteractor()
-        val isDarkThemeEnabled = settingsInteractor.isDarkThemeEnabled()
-        settingsInteractor.switchTheme(isDarkThemeEnabled)
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
