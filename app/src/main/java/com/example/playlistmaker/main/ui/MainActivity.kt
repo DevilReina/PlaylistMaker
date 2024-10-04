@@ -1,10 +1,9 @@
 package com.example.playlistmaker.main.ui
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.databinding.ActivityMainBinding
-import com.example.playlistmaker.main.ui.view_model.MainViewModel
 import com.example.playlistmaker.media.ui.MediaLibraryActivity
 import com.example.playlistmaker.search.ui.SearchActivity
 import com.example.playlistmaker.settings.ui.SettingsActivity
@@ -13,11 +12,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    // Инициализация ViewModel с использованием фабрики
-    private val mainViewModel: MainViewModel by viewModels {
-        MainViewModel.getMainViewModelFactory(application)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -25,17 +19,20 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Устанавливаем обработчики для кнопок через ViewBinding и ViewModel
+        // Устанавливаем обработчики для кнопок напрямую через Intent
         binding.searchButton.setOnClickListener {
-            mainViewModel.openActivity(SearchActivity::class.java)
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
         }
 
         binding.mediaLibraryButton.setOnClickListener {
-            mainViewModel.openActivity(MediaLibraryActivity::class.java)
+            val intent = Intent(this, MediaLibraryActivity::class.java)
+            startActivity(intent)
         }
 
         binding.settingsButton.setOnClickListener {
-            mainViewModel.openActivity(SettingsActivity::class.java)
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
         }
     }
 }

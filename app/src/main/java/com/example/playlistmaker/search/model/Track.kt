@@ -1,5 +1,7 @@
 package com.example.playlistmaker.search.model
 
+import java.io.Serializable
+
 data class Track (
     val trackName: String,
     val artistName: String,
@@ -10,4 +12,4 @@ data class Track (
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String?
-)
+): Serializable

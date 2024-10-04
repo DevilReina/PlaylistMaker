@@ -3,9 +3,6 @@
     <string name="media_btn">Медиатека</string>
     <string name="settings_btn">Настройки</string>
     <string name="back_button">Назад</string>
-    <string name="share_app">Поделиться</string>
-    <string name="contact_support">Поддержка</string>
-    <string name="user_agreement">Пользовательское соглашение</string>
     <string name="dark_theme">Темная тема</string>
     <string name="share_btn">Поделиться приложением</string>
     <string name="support_btn">Написать в поддержку</string>

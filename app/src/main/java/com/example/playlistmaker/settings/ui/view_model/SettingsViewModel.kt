@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import com.example.playlistmaker.settings.model.ThemeSettings
@@ -24,32 +23,20 @@ class SettingsViewModel(
     // Обновление настроек темы и применение
     fun updateThemeSettings(themeSettings: ThemeSettings) {
         settingsInteractor.updateThemeSettings(themeSettings)
-        applyTheme(themeSettings.isDarkTheme)
+        _themeChanged.postValue(themeSettings.isDarkTheme)
     }
 
-    // Применение темы через ViewModel
-    private fun applyTheme(isDarkTheme: Boolean) {
-        AppCompatDelegate.setDefaultNightMode(
-            if (isDarkTheme) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
-        )
-        _themeChanged.postValue(isDarkTheme)
-    }
-
-    // Шаринг приложения
+    // Шаринг приложения через sharingInteractor
     fun shareApp() {
         sharingInteractor.shareApp()
     }
 
-    // Открытие пользовательских соглашений
+    // Открытие пользовательских соглашений через sharingInteractor
     fun openTerms() {
         sharingInteractor.openTerms()
     }
 
-    // Открытие поддержки
+    // Открытие поддержки через sharingInteractor
     fun openSupport() {
         sharingInteractor.openSupport()
     }

@@ -15,6 +15,7 @@ import com.google.gson.Gson
 import android.os.Handler
 import android.os.Looper
 import androidx.activity.viewModels
+import androidx.core.widget.doOnTextChanged
 import com.example.playlistmaker.App
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
@@ -99,25 +100,15 @@ class SearchActivity : AppCompatActivity() {
             hideHistory(false)
         }
 
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // Заглушка для будущих задач
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val historyState = binding.searchEditText.hasFocus() && binding.searchEditText.text.isEmpty()
-                clearError()
-                showHistory(historyState)
-                searchDebounce()
-                // Показываем или скрываем кнопку сброса в зависимости от наличия текста
-                binding.clearButton.isVisible = !s.isNullOrEmpty()
-                searchText = s.toString()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // Заглушка для будущих задач
-            }
-        })
+        binding.searchEditText.doOnTextChanged { text, _, _, _ ->
+            val historyState = binding.searchEditText.hasFocus() && text.isNullOrEmpty()
+            clearError()
+            showHistory(historyState)
+            searchDebounce()
+            // Показываем или скрываем кнопку сброса в зависимости от наличия текста
+            binding.clearButton.isVisible = !text.isNullOrEmpty()
+            searchText = text.toString()
+        }
 
         binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {

@@ -19,9 +19,13 @@ import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.settings.domain.impl.SettingsInteractorImpl
 import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.settings.domain.api.SettingsRepository
+import com.example.playlistmaker.sharing.data.SharingNavigator
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
-import com.example.playlistmaker.sharing.ExternalNavigator
+import com.example.playlistmaker.sharing.data.SharingRepositoryImpl
+import com.example.playlistmaker.sharing.data.impl.SharingNavigatorImpl
+import com.example.playlistmaker.sharing.domain.api.SharingRepository
+import com.example.playlistmaker.utils.SEARCH_PREFS
 
 
 object Creator {
@@ -32,7 +36,7 @@ object Creator {
     }
     // SearchHistoryInteractor использует SharedPreferences из Application Context
     fun provideSearchHistoryInteractor(): SearchHistoryInteractor {
-        val sharedPreferences = App.getAppContext().getSharedPreferences("SEARCH_PREFS", Context.MODE_PRIVATE)
+        val sharedPreferences = App.getAppContext().getSharedPreferences(SEARCH_PREFS, Context.MODE_PRIVATE)
         return SearchHistoryInteractorImpl(SearchHistoryRepositoryImpl(sharedPreferences))
     }
     fun providePlayerInteractor(): PlayerInteractor {
@@ -42,9 +46,19 @@ object Creator {
     fun provideSettingsInteractor(): SettingsInteractor {
         return SettingsInteractorImpl(getSettingsRepository())
     }
-    // В Creator
+
+    private fun provideSharingNavigator(context: Context): SharingNavigator {
+        return SharingNavigatorImpl(context)
+    }
+
+    fun provideSharingRepository(context: Context): SharingRepository {
+        return SharingRepositoryImpl(context)
+    }
+
     fun provideSharingInteractor(context: Context): SharingInteractor {
-        return SharingInteractorImpl(ExternalNavigator(context))
+        val repository = provideSharingRepository(context)
+        val navigator = provideSharingNavigator(context)
+        return SharingInteractorImpl(repository, navigator)
     }
 
     // TracksRepository использует сетевой клиент, инициализированный с помощью Retrofit

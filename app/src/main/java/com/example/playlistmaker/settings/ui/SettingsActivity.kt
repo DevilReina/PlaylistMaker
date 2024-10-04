@@ -1,14 +1,11 @@
 package com.example.playlistmaker.settings.ui
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.settings.model.ThemeSettings
 import com.example.playlistmaker.settings.ui.view_model.SettingsViewModel
-import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -18,7 +15,6 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Инициализация ViewBinding
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -34,7 +30,7 @@ class SettingsActivity : AppCompatActivity() {
         // Подписываемся на изменения темы
         settingsViewModel.themeChanged.observe(this) { _ -> }
 
-        // Обработчики других кнопок
+        // Обработчики других кнопок через ViewModel
         binding.shareAppButton.setOnClickListener {
             settingsViewModel.shareApp()
         }
@@ -52,3 +48,4 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 }
+

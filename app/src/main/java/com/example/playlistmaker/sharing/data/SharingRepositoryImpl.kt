@@ -9,12 +9,12 @@ class SharingRepositoryImpl(private val context: Context) : SharingRepository {
 
     override fun getShareAppLink(): String {
         // Получаем ссылку на приложение из ресурсов
-        return context.getString(R.string.share_app)
+        return context.getString(R.string.share_message)
     }
 
     override fun getTermsLink(): String {
         // Получаем ссылку на пользовательское соглашение из ресурсов
-        return context.getString(R.string.user_agreement)
+        return context.getString(R.string.user_agreement_url)
     }
 
     override fun getSupportEmailData(): EmailData {

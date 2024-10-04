@@ -1,39 +1,34 @@
-package com.example.playlistmaker.sharing
+package com.example.playlistmaker.sharing.data.impl
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import com.example.playlistmaker.sharing.data.SharingNavigator
 import com.example.playlistmaker.sharing.model.EmailData
 
-class ExternalNavigator(private val context: Context) {
+class SharingNavigatorImpl(private val context: Context) : SharingNavigator {
 
-    // Метод для получения контекста
-    fun getContext(): Context = context
-
-    // Метод для отправки ссылки на приложение
-    fun shareLink(link: String) {
+    override fun shareApp(appLink: String) {
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, link)
+            putExtra(Intent.EXTRA_TEXT, appLink)
         }
         context.startActivity(Intent.createChooser(shareIntent, "Share via"))
     }
 
-    // Метод для открытия ссылки в браузере
     @SuppressLint("QueryPermissionsNeeded")
-    fun openLink(url: String) {
+    override fun openTerms(termsLink: String) {
         val linkIntent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse(url)
+            data = Uri.parse(termsLink)
         }
         if (linkIntent.resolveActivity(context.packageManager) != null) {
             context.startActivity(linkIntent)
         }
     }
 
-    // Метод для отправки email
     @SuppressLint("QueryPermissionsNeeded")
-    fun openEmail(emailData: EmailData) {
+    override fun openSupport(emailData: EmailData) {
         val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:")
             putExtra(Intent.EXTRA_EMAIL, arrayOf(emailData.email))

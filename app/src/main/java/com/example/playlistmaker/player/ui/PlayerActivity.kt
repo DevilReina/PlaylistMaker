@@ -68,27 +68,30 @@ class PlayerActivity : AppCompatActivity() {
             .transform(RoundedCorners(dpToPx(8.0F, this)))
             .into(binding.albumImage)
 
-        binding.trackName.text = track.trackName
-        binding.artist.text = track.artistName
-        binding.durationValue.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
-        binding.yearValue.text = track.releaseDate.substring(0, 4)
-        binding.genreValue.text = track.primaryGenreName
-        binding.country.text = track.country
+        with(binding) {
+            trackName.text = track.trackName
+            artist.text = track.artistName
+            durationValue.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
+            yearValue.text = track.releaseDate.substring(0, 4)
+            genreValue.text = track.primaryGenreName
+            country.text = track.country
 
-        if (track.collectionName.isEmpty()) {
-            binding.albumAttr.isVisible = false
-            binding.albumValue.isVisible = false
-        } else {
-            binding.albumAttr.isVisible = true
-            binding.albumValue.isVisible = true
-            binding.albumValue.text = track.collectionName
 
-            val maxLength = 30  // Максимальное количество символов
-            if (track.collectionName.length > maxLength) {
-                val shortened = track.collectionName.substring(0, maxLength) + "..."
-                binding.albumValue.text = shortened
+            if (track.collectionName.isEmpty()) {
+                albumAttr.isVisible = false
+                binding.albumValue.isVisible = false
             } else {
-                binding.albumValue.text = track.collectionName
+                albumAttr.isVisible = true
+                albumValue.isVisible = true
+                albumValue.text = track.collectionName
+
+                val maxLength = 30  // Максимальное количество символов
+                if (track.collectionName.length > maxLength) {
+                    val shortened = track.collectionName.substring(0, maxLength) + "..."
+                    albumValue.text = shortened
+                } else {
+                    albumValue.text = track.collectionName
+                }
             }
         }
     }
@@ -128,7 +131,7 @@ class PlayerActivity : AppCompatActivity() {
     private fun playbackControl() {
         when (playerViewModel.playerState.value) {
             is PlayerState.Playing -> playerViewModel.pausePlayer()
-            is PlayerState.Paused, is PlayerState.Prepared -> playerViewModel.startPlayer()
+            is PlayerState.Paused, PlayerState.Prepared -> playerViewModel.startPlayer()
             else -> Unit
         }
     }
