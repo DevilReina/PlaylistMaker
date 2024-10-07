@@ -5,22 +5,21 @@ import com.example.playlistmaker.sharing.domain.api.SharingRepository
 
 
 class SharingInteractorImpl(
-    private val repository: SharingRepository,
-    private val navigator: SharingRepository
+    private val repository: SharingRepository
 ) : SharingInteractor {
 
     override fun shareApp() {
         val appLink = repository.getShareAppLink()
-        navigator.shareApp(appLink)
+        repository.shareApp(appLink)
     }
 
     override fun openTerms() {
         val termsLink = repository.getTermsLink()
-        navigator.openTerms(termsLink)
+        repository.openTerms(termsLink)
     }
 
     override fun openSupport() {
         val emailData = repository.getSupportEmailData()
-        navigator.openSupport(emailData)
+        repository.openSupport(emailData)
     }
 }

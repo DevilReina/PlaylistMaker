@@ -51,8 +51,7 @@ object Creator {
 
     fun provideSharingInteractor(context: Context): SharingInteractor {
         val repository = provideSharingRepository(context)
-        val navigator = provideSharingRepository(context)
-        return SharingInteractorImpl(repository, navigator)
+        return SharingInteractorImpl(repository)
     }
 
     // TracksRepository использует сетевой клиент, инициализированный с помощью Retrofit
