@@ -7,7 +7,7 @@
     android:background="?attr/colorOnBackground"
     android:orientation="vertical"
     android:paddingHorizontal="13dp"
-    tools:context=".presentation.activities.SearchActivity">
+    tools:context=".search.ui.SearchActivity">
 
 
 

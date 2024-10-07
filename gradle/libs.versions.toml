@@ -28,7 +28,9 @@ glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "gl
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 convertergson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "convertergson" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+
 
