@@ -9,17 +9,14 @@ class SharingInteractorImpl(
 ) : SharingInteractor {
 
     override fun shareApp() {
-        val appLink = repository.getShareAppLink()
-        repository.shareApp(appLink)
+        repository.shareApp(repository.getShareAppLink())
     }
 
     override fun openTerms() {
-        val termsLink = repository.getTermsLink()
-        repository.openTerms(termsLink)
+        repository.openTerms(repository.getTermsLink())
     }
 
     override fun openSupport() {
-        val emailData = repository.getSupportEmailData()
-        repository.openSupport(emailData)
+        repository.openSupport(repository.getSupportEmailData())
     }
 }
