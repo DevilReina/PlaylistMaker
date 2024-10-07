@@ -19,11 +19,9 @@ import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.settings.domain.impl.SettingsInteractorImpl
 import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.settings.domain.api.SettingsRepository
-import com.example.playlistmaker.sharing.data.SharingNavigator
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 import com.example.playlistmaker.sharing.data.SharingRepositoryImpl
-import com.example.playlistmaker.sharing.data.impl.SharingNavigatorImpl
 import com.example.playlistmaker.sharing.domain.api.SharingRepository
 import com.example.playlistmaker.utils.SEARCH_PREFS
 
@@ -47,17 +45,13 @@ object Creator {
         return SettingsInteractorImpl(getSettingsRepository())
     }
 
-    private fun provideSharingNavigator(context: Context): SharingNavigator {
-        return SharingNavigatorImpl(context)
-    }
-
     fun provideSharingRepository(context: Context): SharingRepository {
         return SharingRepositoryImpl(context)
     }
 
     fun provideSharingInteractor(context: Context): SharingInteractor {
         val repository = provideSharingRepository(context)
-        val navigator = provideSharingNavigator(context)
+        val navigator = provideSharingRepository(context)
         return SharingInteractorImpl(repository, navigator)
     }
 

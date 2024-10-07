@@ -12,5 +12,5 @@ sealed class SearchState {
 // Для управления состоянием истории
 sealed class HistoryState {
     data class ShowHistory(val historyTracks: List<Track>) : HistoryState()
-    data object HideHistory : HistoryState()
+    object HideHistory : HistoryState()
 }

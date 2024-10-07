@@ -6,4 +6,7 @@ interface SharingRepository {
     fun getShareAppLink(): String
     fun getTermsLink(): String
     fun getSupportEmailData(): EmailData
+    fun shareApp(appLink: String)
+    fun openTerms(termsLink: String)
+    fun openSupport(emailData: EmailData)
 }
