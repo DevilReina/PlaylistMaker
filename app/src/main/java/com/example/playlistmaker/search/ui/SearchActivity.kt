@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -14,11 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import android.os.Handler
 import android.os.Looper
-import androidx.activity.viewModels
 import androidx.core.widget.doOnTextChanged
 import com.example.playlistmaker.App
-import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.R
+
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.model.Track
 import com.example.playlistmaker.search.adapters.TrackAdapter
@@ -26,19 +22,19 @@ import com.example.playlistmaker.search.model.HistoryState
 import com.example.playlistmaker.search.model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 
 class SearchActivity : AppCompatActivity() {
 
 
-    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
+    private val searchHistoryInteractor: SearchHistoryInteractor by inject()
 
     private lateinit var binding: ActivitySearchBinding
-    private val viewModel: SearchViewModel by viewModels {
-        SearchViewModel.provideFactory(
-            Creator.provideTracksInteractor()
-        )
-    }
+    private val viewModel by viewModel<SearchViewModel>()
     private lateinit var searchHistoryAdapter: TrackAdapter
     private var tracks: MutableList<Track> = mutableListOf()
 

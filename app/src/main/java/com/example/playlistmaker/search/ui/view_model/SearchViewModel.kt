@@ -47,18 +47,5 @@ class SearchViewModel(
         }
     }
 
-    companion object {
-        fun provideFactory(
-            tracksInteractor: TracksInteractor
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                if (modelClass.isAssignableFrom(SearchViewModel::class.java)) {
-                    @Suppress("UNCHECKED_CAST")
-                    return SearchViewModel(tracksInteractor) as T
-                }
-                throw IllegalArgumentException("Неизвестный класс ViewModel")
-            }
-        }
-    }
 }
 

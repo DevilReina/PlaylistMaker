@@ -5,7 +5,6 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.model.PlayerState
 import java.text.SimpleDateFormat
@@ -67,17 +66,6 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
 
     companion object {
         private const val UPDATE_DELAY = 300L
-        fun provideFactory(playerInteractor: PlayerInteractor): ViewModelProvider.Factory {
-            return object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    if (modelClass.isAssignableFrom(PlayerViewModel::class.java)) {
-                        return PlayerViewModel(playerInteractor) as T
-                    }
-                    throw IllegalArgumentException("Неизвестный класс ViewModel")
-                }
-            }
-        }
     }
 }
 

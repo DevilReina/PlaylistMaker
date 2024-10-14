@@ -1,4 +1,4 @@
-package com.example.playlistmaker.sharing.data
+package com.example.playlistmaker.sharing.data.impl
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -33,7 +33,7 @@ class SharingRepositoryImpl(private val context: Context) : SharingRepository {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, appLink)
         }
-        context.startActivity(Intent.createChooser(shareIntent, "Share via"))
+        context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.text_share)))
     }
 
     @SuppressLint("QueryPermissionsNeeded")

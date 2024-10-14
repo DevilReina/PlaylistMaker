@@ -1,13 +1,11 @@
 package com.example.playlistmaker.settings.ui.view_model
 
-import android.content.Context
+
+import android.content.Intent
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import com.example.playlistmaker.settings.model.ThemeSettings
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
@@ -20,25 +18,41 @@ class SettingsViewModel(
     private val _themeChanged = MutableLiveData<Boolean>()
     val themeChanged: LiveData<Boolean> get() = _themeChanged
 
+    private val _actionCommand = MutableLiveData<Intent?>()
+    val actionCommand: LiveData<Intent?> get() = _actionCommand
+
     // Обновление настроек темы и применение
     fun updateThemeSettings(themeSettings: ThemeSettings) {
         settingsInteractor.updateThemeSettings(themeSettings)
         _themeChanged.postValue(themeSettings.isDarkTheme)
     }
 
-    // Шаринг приложения через sharingInteractor
     fun shareApp() {
-        sharingInteractor.shareApp()
+        val appLink = sharingInteractor.shareApp()
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, appLink)
+        }
+        _actionCommand.postValue(Intent.createChooser(shareIntent, "Share via"))
     }
 
-    // Открытие пользовательских соглашений через sharingInteractor
     fun openTerms() {
-        sharingInteractor.openTerms()
+        val termsLink = sharingInteractor.openTerms()
+        val termsIntent = Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse(termsLink)
+        }
+        _actionCommand.postValue(termsIntent)
     }
 
-    // Открытие поддержки через sharingInteractor
     fun openSupport() {
-        sharingInteractor.openSupport()
+        val emailData = sharingInteractor.openSupport()
+        val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(emailData.email))
+            putExtra(Intent.EXTRA_SUBJECT, emailData.subject)
+            putExtra(Intent.EXTRA_TEXT, emailData.body)
+        }
+        _actionCommand.postValue(emailIntent)
     }
 
     // Получение текущих настроек темы
@@ -46,13 +60,4 @@ class SettingsViewModel(
         return settingsInteractor.getThemeSettings()
     }
 
-    companion object {
-        fun provideFactory(context: Context): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val sharingInteractor = Creator.provideSharingInteractor(context)
-                val settingsInteractor = Creator.provideSettingsInteractor()
-                SettingsViewModel(sharingInteractor, settingsInteractor)
-            }
-        }
-    }
 }

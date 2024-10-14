@@ -38,6 +38,12 @@ android {
 }
 
 dependencies {
+    implementation(libs.koin.core)  // Основная библиотека Koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.android.compat)
+    implementation(libs.koin.androidx.navigation)
+    implementation(libs.koin.androidx.workmanager)
+
     implementation(libs.convertergson)
     implementation(libs.retrofit)
     implementation(libs.gson)

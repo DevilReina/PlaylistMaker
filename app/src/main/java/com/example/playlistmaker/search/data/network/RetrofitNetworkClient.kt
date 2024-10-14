@@ -7,21 +7,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
-class RetrofitNetworkClient: NetworkClient
+class RetrofitNetworkClient(private val apiService: ApiService) : NetworkClient
 {
-    private val iTunesBaseUrl = "https://itunes.apple.com"
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(iTunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val iTunesService = retrofit.create(ApiService::class.java)
 
     override fun doRequest(dto: Any): Response {
         return try {
             if (dto is TracksRequest) {
-                val resp = iTunesService.searchTracks(dto.expression).execute()
+                val resp = apiService.searchTracks(dto.expression).execute()
 
                 val body = resp.body() ?: Response()
                 body.apply { resultCode = resp.code() }
