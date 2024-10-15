@@ -4,7 +4,6 @@ import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 import com.example.playlistmaker.sharing.domain.api.SharingRepository
 import com.example.playlistmaker.sharing.model.EmailData
 
-
 class SharingInteractorImpl(
     private val repository: SharingRepository
 ) : SharingInteractor {

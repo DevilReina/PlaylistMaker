@@ -14,7 +14,6 @@ import android.os.Handler
 import android.os.Looper
 import androidx.core.widget.doOnTextChanged
 import com.example.playlistmaker.App
-
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.model.Track
 import com.example.playlistmaker.search.adapters.TrackAdapter
@@ -22,20 +21,15 @@ import com.example.playlistmaker.search.model.HistoryState
 import com.example.playlistmaker.search.model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import com.example.playlistmaker.player.ui.PlayerActivity
-import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 
 class SearchActivity : AppCompatActivity() {
 
-
-    private val searchHistoryInteractor: SearchHistoryInteractor by inject()
-
-    private lateinit var binding: ActivitySearchBinding
     private val viewModel by viewModel<SearchViewModel>()
-    private lateinit var searchHistoryAdapter: TrackAdapter
+    private lateinit var binding: ActivitySearchBinding
+
     private var tracks: MutableList<Track> = mutableListOf()
 
     private var searchText: String = ""
@@ -139,15 +133,15 @@ class SearchActivity : AppCompatActivity() {
         }
 
         setupRecyclerView()
-        updateSearchHistory()
+        viewModel.updateSearchHistory()
         showHistory(false)
 
         binding.clearHistoryButton.setOnClickListener {
-            // Очищаем историю через интерактор
-            clearHistory()
+            // Очищаем историю
+            viewModel.clearHistory()
 
             // Обновляем интерфейс
-            updateSearchHistory() // Обновляем список истории
+            viewModel.updateSearchHistory() // Обновляем список истории
             showHistory(false) // Прячем историю
             binding.searchEditText.clearFocus() // Убираем фокус с поля ввода
         }
@@ -156,12 +150,12 @@ class SearchActivity : AppCompatActivity() {
 
 
     private fun setupRecyclerView() {
-        searchHistoryAdapter = TrackAdapter(emptyList()) { track ->
+        viewModel.searchHistoryAdapter = TrackAdapter(emptyList()) { track ->
             clickDebounce()
             onTrackClick(track)
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = searchHistoryAdapter
+        binding.recyclerView.adapter = viewModel.searchHistoryAdapter
     }
 
 
@@ -198,11 +192,11 @@ class SearchActivity : AppCompatActivity() {
         viewModel.getHistoryState().observe(this) { historyState ->
             when (historyState) {
                 is HistoryState.ShowHistory -> {
-                    searchHistoryAdapter.updateTracks(historyState.historyTracks)
+                    viewModel.searchHistoryAdapter.updateTracks(historyState.historyTracks)
                     binding.searchHistoryTitle.isVisible = true
                 }
                 is HistoryState.HideHistory -> {
-                    searchHistoryAdapter.updateTracks(emptyList())
+                    viewModel.searchHistoryAdapter.updateTracks(emptyList())
                     binding.searchHistoryTitle.isVisible = false
                 }
             }
@@ -216,8 +210,8 @@ class SearchActivity : AppCompatActivity() {
         startActivity(intent)
         // Обновляем историю с задержкой, чтобы сначала было мгновенное действие
         Handler(Looper.getMainLooper()).postDelayed({
-            saveTrackToHistory(track) // Сохраняем трек в истории через интерактор
-            updateSearchHistory()
+            viewModel.saveTrackToHistory(track) // Сохраняем трек в истории
+            viewModel.updateSearchHistory()
         }, 200)  // 200 мс задержка для асинхронности
 
     }
@@ -229,24 +223,13 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateSearchHistory() {
-        val history = searchHistoryInteractor.getHistory()
-        searchHistoryAdapter.updateTracks(history)
-    }
-    private fun saveTrackToHistory(track: Track) {
-        searchHistoryInteractor.saveTrack(track)
-        updateSearchHistory()
-    }
-    private fun clearHistory() {
-        searchHistoryInteractor.clearHistory()
-        updateSearchHistory()
-    }
+
 
     private fun showHistory(state: Boolean) {
         if (state) {
             hideHistory(true)
             setupRecyclerView()
-            updateSearchHistory()
+            viewModel.updateSearchHistory()
         } else {
             hideHistory(false)
             tracks.clear()
@@ -269,7 +252,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun hideHistory(state: Boolean) {
         var stateCount = state
-        if (searchHistoryAdapter.itemCount <= 0) {
+        if (viewModel.searchHistoryAdapter.itemCount <= 0) {
             stateCount = false
         }
 

@@ -3,8 +3,9 @@ package com.example.playlistmaker.search.ui.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
+import com.example.playlistmaker.search.adapters.TrackAdapter
+import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.model.Track
 import com.example.playlistmaker.search.model.HistoryState
@@ -12,7 +13,8 @@ import com.example.playlistmaker.search.model.SearchState
 import java.io.IOException
 
 class SearchViewModel(
-    private val tracksInteractor: TracksInteractor
+    private val tracksInteractor: TracksInteractor,
+    private val searchHistoryInteractor: SearchHistoryInteractor
 ) : ViewModel() {
 
     private val searchState = MutableLiveData<SearchState>()
@@ -20,6 +22,8 @@ class SearchViewModel(
 
     private val historyState = MutableLiveData<HistoryState>()
     fun getHistoryState(): LiveData<HistoryState> = historyState
+
+    lateinit var searchHistoryAdapter: TrackAdapter
 
     fun performSearch(query: String) {
         if (query.isEmpty()) return
@@ -45,6 +49,18 @@ class SearchViewModel(
             }
             searchState.postValue(SearchState.Error(errorMessageResId))
         }
+    }
+    fun updateSearchHistory() {
+        val history = searchHistoryInteractor.getHistory()
+        searchHistoryAdapter.updateTracks(history)
+    }
+    fun saveTrackToHistory(track: Track) {
+        searchHistoryInteractor.saveTrack(track)
+        updateSearchHistory()
+    }
+    fun clearHistory() {
+        searchHistoryInteractor.clearHistory()
+        updateSearchHistory()
     }
 
 }
