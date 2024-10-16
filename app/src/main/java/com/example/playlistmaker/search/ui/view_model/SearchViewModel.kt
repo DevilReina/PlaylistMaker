@@ -4,12 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.R
-import com.example.playlistmaker.search.adapters.TrackAdapter
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.model.Track
-import com.example.playlistmaker.search.model.HistoryState
-import com.example.playlistmaker.search.model.SearchState
+
+import com.example.playlistmaker.search.model.SearchScreenState
 import java.io.IOException
 
 class SearchViewModel(
@@ -17,27 +16,22 @@ class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor
 ) : ViewModel() {
 
-    private val searchState = MutableLiveData<SearchState>()
-    fun getSearchState(): LiveData<SearchState> = searchState
-
-    private val historyState = MutableLiveData<HistoryState>()
-    fun getHistoryState(): LiveData<HistoryState> = historyState
-
-    lateinit var searchHistoryAdapter: TrackAdapter
+    private val screenState = MutableLiveData<SearchScreenState>()
+    fun getScreenState(): LiveData<SearchScreenState> = screenState
 
     fun performSearch(query: String) {
         if (query.isEmpty()) return
 
-        searchState.value = SearchState.Loading
+        screenState.value = SearchScreenState.Loading
 
         // Вызов интерактора для поиска треков
         tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
             override fun consume(foundTracks: List<Track>) {
                 // Если треки найдены, обновляем состояние
                 if (foundTracks.isNotEmpty()) {
-                    searchState.postValue(SearchState.Success(foundTracks))
+                    screenState.postValue(SearchScreenState.ShowSearchResults(foundTracks))
                 } else {
-                    searchState.postValue(SearchState.Error(R.string.text_error))
+                    screenState.postValue(SearchScreenState.Error(R.string.text_error))
                 }
             }
         }) { throwable ->
@@ -47,12 +41,16 @@ class SearchViewModel(
             } else {
                 R.string.text_error
             }
-            searchState.postValue(SearchState.Error(errorMessageResId))
+            screenState.postValue(SearchScreenState.Error(errorMessageResId))
         }
     }
     fun updateSearchHistory() {
         val history = searchHistoryInteractor.getHistory()
-        searchHistoryAdapter.updateTracks(history)
+        if (history.isNotEmpty()) {
+            screenState.postValue(SearchScreenState.ShowHistory(history))
+        } else {
+            screenState.postValue(SearchScreenState.Empty)
+        }
     }
     fun saveTrackToHistory(track: Track) {
         searchHistoryInteractor.saveTrack(track)
