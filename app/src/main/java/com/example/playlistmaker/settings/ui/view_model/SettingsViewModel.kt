@@ -53,7 +53,9 @@ class SettingsViewModel(
         }
         _actionCommand.postValue(emailIntent)
     }
-
+    fun clearActionCommand() {
+        _actionCommand.postValue(null)
+    }
     // Получение текущих настроек темы
     fun getThemeSettings(): ThemeSettings {
         return settingsInteractor.getThemeSettings()

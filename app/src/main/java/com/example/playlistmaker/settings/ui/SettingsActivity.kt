@@ -48,6 +48,7 @@ class SettingsActivity : AppCompatActivity() {
         }
         viewModel.actionCommand.observe(this) { intent ->
             intent?.let { startActivity(it) }
+            viewModel.clearActionCommand()
         }
     }
 
