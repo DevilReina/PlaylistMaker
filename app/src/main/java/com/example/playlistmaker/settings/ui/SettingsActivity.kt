@@ -1,16 +1,16 @@
 package com.example.playlistmaker.settings.ui
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.settings.model.ThemeSettings
 import com.example.playlistmaker.settings.ui.view_model.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private val settingsViewModel: SettingsViewModel by viewModels { SettingsViewModel.provideFactory(this) }
+    private val viewModel by viewModel<SettingsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,33 +19,38 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Устанавливаем начальное состояние темы
-        val isDarkThemeEnabled = settingsViewModel.getThemeSettings().isDarkTheme
+        val isDarkThemeEnabled = viewModel.getThemeSettings().isDarkTheme
         binding.themeSwitcher.isChecked = isDarkThemeEnabled
 
         // Обработчик переключения темы
         binding.themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
-            settingsViewModel.updateThemeSettings(ThemeSettings(isChecked))
+            viewModel.updateThemeSettings(ThemeSettings(isChecked))
         }
 
         // Подписываемся на изменения темы
-        settingsViewModel.themeChanged.observe(this) { _ -> }
+        viewModel.themeChanged.observe(this) { _ -> }
 
         // Обработчики других кнопок через ViewModel
         binding.shareAppButton.setOnClickListener {
-            settingsViewModel.shareApp()
+            viewModel.shareApp()
         }
 
         binding.contactSupportButton.setOnClickListener {
-            settingsViewModel.openSupport()
+            viewModel.openSupport()
         }
 
         binding.userAgreementButton.setOnClickListener {
-            settingsViewModel.openTerms()
+            viewModel.openTerms()
         }
 
         binding.back.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+        viewModel.actionCommand.observe(this) { intent ->
+            intent?.let { startActivity(it) }
+            viewModel.clearActionCommand()
+        }
     }
+
 }
 

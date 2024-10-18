@@ -3,29 +3,26 @@ package com.example.playlistmaker.player.ui
 import android.icu.text.SimpleDateFormat
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.viewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.App.Companion.TRACK_DT
 import com.google.gson.Gson
 import java.util.Locale
 import androidx.core.view.isVisible
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.model.PlayerState
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.example.playlistmaker.search.model.Track
 import com.example.playlistmaker.utils.dpToPx
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
 
     // ViewModel
-    private val playerViewModel: PlayerViewModel by viewModels {
-        PlayerViewModel.provideFactory(Creator.providePlayerInteractor())
-    }
+    private val viewModel by viewModel<PlayerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +45,7 @@ class PlayerActivity : AppCompatActivity() {
         setupTrackInfo(track)
 
         // Подготовка плеера
-        playerViewModel.preparePlayer(track.previewUrl)
+        viewModel.preparePlayer(track.previewUrl)
 
         // Подписка на обновления состояния плеера
         observePlayerState()
@@ -85,7 +82,7 @@ class PlayerActivity : AppCompatActivity() {
                 albumValue.isVisible = true
                 albumValue.text = track.collectionName
 
-                val maxLength = 30  // Максимальное количество символов
+                    val maxLength = 30  // Максимальное количество символов
                 if (track.collectionName.length > maxLength) {
                     val shortened = track.collectionName.substring(0, maxLength) + "..."
                     albumValue.text = shortened
@@ -97,7 +94,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun observePlayerState() {
-        playerViewModel.playerState.observe(this) { state ->
+        viewModel.playerState.observe(this) { state ->
             when (state) {
                 is PlayerState.Playing -> binding.playButton.setImageResource(R.drawable.pause_button)
                 is PlayerState.Paused, is PlayerState.Prepared -> binding.playButton.setImageResource(R.drawable.play_button)
@@ -108,19 +105,19 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun observePlayerPosition() {
-        playerViewModel.currentPosition.observe(this) { position ->
+        viewModel.currentPosition.observe(this) { position ->
             binding.durationTime.text = position
         }
     }
 
     override fun onPause() {
         super.onPause()
-        playerViewModel.pausePlayer()
+        viewModel.pausePlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        playerViewModel.releasePlayer()
+        viewModel.releasePlayer()
     }
     // Управление воспроизведением и паузой
     private fun setupButtonListener() {
@@ -129,9 +126,9 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
     private fun playbackControl() {
-        when (playerViewModel.playerState.value) {
-            is PlayerState.Playing -> playerViewModel.pausePlayer()
-            is PlayerState.Paused, PlayerState.Prepared -> playerViewModel.startPlayer()
+        when (viewModel.playerState.value) {
+            is PlayerState.Playing -> viewModel.pausePlayer()
+            is PlayerState.Paused, PlayerState.Prepared -> viewModel.startPlayer()
             else -> Unit
         }
     }
