@@ -38,6 +38,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.fragment)
     implementation(libs.koin.core)  // Основная библиотека Koin
     implementation(libs.koin.android)
     implementation(libs.koin.android.compat)
