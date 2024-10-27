@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.App
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.search.model.Track
 import com.example.playlistmaker.search.adapters.TrackAdapter
@@ -27,12 +28,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
-    private val binding get() = _binding?: throw IllegalStateException("Error")
+    private val binding get() = _binding!!
     private val viewModel by viewModel<SearchViewModel>()
 
     private lateinit var trackAdapter: TrackAdapter
     private var searchText: String = ""
     private val handler = Handler(Looper.getMainLooper())
+    private var isClickAllowed = true
 
     private val searchRunnable = Runnable {
         if (binding.searchEditText.text.toString().isNotEmpty()) {
@@ -40,12 +42,6 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-    }
-
-    private var isClickAllowed = true
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,23 +50,16 @@ class SearchFragment : Fragment() {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-    private fun clickDebounce() : Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        // Определяем высоту нижней панели навигации
+        val navBarHeight = resources.getDimensionPixelSize(R.dimen.bottom_navigation_height)
+        // Настраиваем нижний margin для кнопки "Очистить"
+        val params = binding.clearHistoryButton.layoutParams as ViewGroup.MarginLayoutParams
+        params.bottomMargin = navBarHeight
+        binding.clearHistoryButton.layoutParams = params
 
         trackAdapter = TrackAdapter(emptyList()) { track ->
             if (clickDebounce()) onTrackClick(track)
@@ -82,7 +71,6 @@ class SearchFragment : Fragment() {
         }
 
         observeViewModel()
-
 
         binding.searchEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && binding.searchEditText.text.isEmpty()) {
@@ -97,13 +85,12 @@ class SearchFragment : Fragment() {
             clearAdapter()
             clearError()
             hideHistory()
-            binding.clearButton.isVisible = false // Скрываем clearButton, когда очищаем строку поиска
+            binding.clearButton.isVisible = false
         }
 
         binding.searchEditText.doOnTextChanged { text, _, _, _ ->
             clearError()
             searchDebounce()
-            // Показываем кнопку очистки только при наличии текста
             binding.clearButton.isVisible = !text.isNullOrEmpty()
             searchText = text.toString()
         }
@@ -130,12 +117,19 @@ class SearchFragment : Fragment() {
             viewModel.clearHistory()
         }
 
+        // Восстановление состояния при пересоздании фрагмента
         if (savedInstanceState != null) {
             searchText = savedInstanceState.getString(KEY_SEARCH_TEXT, "")
             binding.searchEditText.setText(searchText)
+            viewModel.restoreLastState()
         } else {
-            binding.clearButton.isVisible = false // Изначально скрываем clearButton
+            binding.clearButton.isVisible = false
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun observeViewModel() {
@@ -150,11 +144,25 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
     private fun showLoading() {
         binding.progressBar.isVisible = true
         binding.recyclerView.isVisible = false
         binding.errorLayout.isVisible = false
-        binding.clearHistoryButton.isVisible = false // Скрываем clearHistoryButton во время загрузки
+        binding.clearHistoryButton.isVisible = false
         binding.searchHistoryTitle.isVisible = false
     }
 
@@ -171,7 +179,7 @@ class SearchFragment : Fragment() {
         binding.recyclerView.isVisible = false
         binding.errorLayout.isVisible = true
         binding.errorText.text = getString(messageResId)
-        binding.clearHistoryButton.isVisible = false // Скрываем кнопку очистки истории при ошибке
+        binding.clearHistoryButton.isVisible = false
     }
 
     private fun showHistory(historyTracks: List<Track>) {
@@ -216,15 +224,6 @@ class SearchFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(KEY_SEARCH_TEXT, searchText)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        savedInstanceState?.let {
-            searchText = it.getString(KEY_SEARCH_TEXT, "")
-            binding.searchEditText.setText(searchText)
-            viewModel.performSearch(searchText)
-        }
     }
 
     companion object {

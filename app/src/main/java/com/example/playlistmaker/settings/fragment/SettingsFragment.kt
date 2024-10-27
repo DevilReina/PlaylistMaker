@@ -13,7 +13,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SettingsFragment : Fragment() {
 
     private var _binding: FragmentSettingsBinding? = null
-    private val binding get() = _binding?: throw IllegalStateException("Error")
+    private val binding get() = _binding!!
 
     private val viewModel by viewModel<SettingsViewModel>()
 

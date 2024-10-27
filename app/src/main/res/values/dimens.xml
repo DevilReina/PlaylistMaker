@@ -10,4 +10,5 @@
     <dimen name="dp_51">51dp</dimen>
     <dimen name="dp_84">84dp</dimen>
     <dimen name="dp_120">120dp</dimen>
+    <dimen name="bottom_navigation_height">56dp</dimen>
 </resources>

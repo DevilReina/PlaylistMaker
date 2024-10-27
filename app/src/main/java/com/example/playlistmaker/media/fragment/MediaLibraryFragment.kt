@@ -13,7 +13,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 class MediaLibraryFragment : Fragment() {
 
     private var _binding: FragmentMediaLibraryBinding? = null
-    private val binding get() = _binding?: throw IllegalStateException("Error")
+    private val binding get() = _binding!!
     private lateinit var tabMediator: TabLayoutMediator
 
     override fun onCreateView(
