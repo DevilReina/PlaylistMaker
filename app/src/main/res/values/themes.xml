@@ -9,6 +9,7 @@
         <item name="colorOnPrimary">@color/searth_clr</item>
         <item name="colorControlNormal">@color/navigation_icon_color</item>
 
+
         <!-- Цвета статус-бара -->
         <item name="android:statusBarColor">@color/statusBarColorLight</item>
         <item name="android:windowLightStatusBar">true</item> <!-- Включает светлый статус-бар -->

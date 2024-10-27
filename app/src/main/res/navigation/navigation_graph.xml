@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/mediaFragment">
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.playlistmaker.search.fragment.SearchFragment"
+        android:label="SearchFragment"
+        tools:layout="@layout/fragment_search">
+
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.playlistmaker.settings.fragment.SettingsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/mediaFragment"
+        android:name="com.example.playlistmaker.media.fragment.MediaLibraryFragment"
+        android:label="MediaFragment"
+        tools:layout="@layout/fragment_media_library" />
+    <activity
+        android:id="@+id/playerActivity"
+        android:name="com.example.playlistmaker.player.ui.PlayerActivity"
+        android:label="PlayerActivity"
+        tools:layout="@layout/activity_player">
+        <argument
+            android:name="track"
+            app:argType="com.example.playlistmaker.search.model.Track" />
+    </activity>
+</navigation>

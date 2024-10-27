@@ -7,7 +7,7 @@
     android:background="?attr/colorOnBackground"
     android:orientation="vertical"
     android:paddingHorizontal="13dp"
-    tools:context=".search.ui.SearchActivity">
+    tools:context=".search.fragment.SearchFragment">
 
 
 
@@ -16,13 +16,6 @@
         android:layout_height="56dp"
         android:layout_marginStart="@dimen/dp_3"
         android:gravity="center">
-
-        <ImageView
-            android:id="@+id/back"
-            android:layout_width="@dimen/dp_24"
-            android:layout_height="@dimen/dp_24"
-            android:layout_marginEnd="@dimen/dp_12"
-            android:background="@drawable/ic_arrow_back" />
 
         <TextView
             style="@style/Title"

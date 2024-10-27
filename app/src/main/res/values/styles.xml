@@ -108,4 +108,20 @@
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/surface</item>
     </style>
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
+        <item name="colorPrimary">@color/surface</item>
+    </style>
+
+    <style name="BottomNavText">
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="BottomNavTextActive">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/nav_clr</item>
+    </style>
 </resources>
