@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search.ui
+package com.example.playlistmaker.search.fragment
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,29 +6,35 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import android.os.Handler
 import android.os.Looper
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import com.example.playlistmaker.App
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.search.model.Track
 import com.example.playlistmaker.search.adapters.TrackAdapter
 import com.example.playlistmaker.search.model.SearchScreenState
-import com.example.playlistmaker.search.ui.view_model.SearchViewModel
+import com.example.playlistmaker.search.view_model.SearchViewModel
 import com.example.playlistmaker.player.ui.PlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
-
+class SearchFragment : Fragment() {
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
     private val viewModel by viewModel<SearchViewModel>()
-    private lateinit var binding: ActivitySearchBinding
+
     private lateinit var trackAdapter: TrackAdapter
     private var searchText: String = ""
     private val handler = Handler(Looper.getMainLooper())
+    private var isClickAllowed = true
 
     private val searchRunnable = Runnable {
         if (binding.searchEditText.text.toString().isNotEmpty()) {
@@ -36,41 +42,35 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    private var isClickAllowed = true
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    private fun clickDebounce() : Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        // Определяем высоту нижней панели навигации
+        val navBarHeight = resources.getDimensionPixelSize(R.dimen.bottom_navigation_height)
+        // Настраиваем нижний margin для кнопки "Очистить"
+        val params = binding.clearHistoryButton.layoutParams as ViewGroup.MarginLayoutParams
+        params.bottomMargin = navBarHeight
+        binding.clearHistoryButton.layoutParams = params
 
         trackAdapter = TrackAdapter(emptyList()) { track ->
             if (clickDebounce()) onTrackClick(track)
         }
 
         binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(this@SearchActivity)
+            layoutManager = LinearLayoutManager(requireContext())
             adapter = trackAdapter
         }
 
         observeViewModel()
-
-        binding.back.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
 
         binding.searchEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && binding.searchEditText.text.isEmpty()) {
@@ -85,13 +85,12 @@ class SearchActivity : AppCompatActivity() {
             clearAdapter()
             clearError()
             hideHistory()
-            binding.clearButton.isVisible = false // Скрываем clearButton, когда очищаем строку поиска
+            binding.clearButton.isVisible = false
         }
 
         binding.searchEditText.doOnTextChanged { text, _, _, _ ->
             clearError()
             searchDebounce()
-            // Показываем кнопку очистки только при наличии текста
             binding.clearButton.isVisible = !text.isNullOrEmpty()
             searchText = text.toString()
         }
@@ -118,16 +117,23 @@ class SearchActivity : AppCompatActivity() {
             viewModel.clearHistory()
         }
 
+        // Восстановление состояния при пересоздании фрагмента
         if (savedInstanceState != null) {
             searchText = savedInstanceState.getString(KEY_SEARCH_TEXT, "")
             binding.searchEditText.setText(searchText)
+            viewModel.restoreLastState()
         } else {
-            binding.clearButton.isVisible = false // Изначально скрываем clearButton
+            binding.clearButton.isVisible = false
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun observeViewModel() {
-        viewModel.getScreenState().observe(this) { state ->
+        viewModel.getScreenState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is SearchScreenState.Loading -> showLoading()
                 is SearchScreenState.ShowSearchResults -> showTracks(state.tracks)
@@ -138,11 +144,25 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
     private fun showLoading() {
         binding.progressBar.isVisible = true
         binding.recyclerView.isVisible = false
         binding.errorLayout.isVisible = false
-        binding.clearHistoryButton.isVisible = false // Скрываем clearHistoryButton во время загрузки
+        binding.clearHistoryButton.isVisible = false
         binding.searchHistoryTitle.isVisible = false
     }
 
@@ -159,7 +179,7 @@ class SearchActivity : AppCompatActivity() {
         binding.recyclerView.isVisible = false
         binding.errorLayout.isVisible = true
         binding.errorText.text = getString(messageResId)
-        binding.clearHistoryButton.isVisible = false // Скрываем кнопку очистки истории при ошибке
+        binding.clearHistoryButton.isVisible = false
     }
 
     private fun showHistory(historyTracks: List<Track>) {
@@ -188,12 +208,12 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun hideKeyboard() {
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(binding.clearButton.windowToken, 0)
     }
 
     private fun onTrackClick(track: Track) {
-        val intent = Intent(this, PlayerActivity::class.java)
+        val intent = Intent(requireContext(), PlayerActivity::class.java)
         intent.putExtra(App.TRACK_DT, Gson().toJson(track))
         startActivity(intent)
         Handler(Looper.getMainLooper()).postDelayed({
@@ -204,13 +224,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(KEY_SEARCH_TEXT, searchText)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        searchText = savedInstanceState.getString(KEY_SEARCH_TEXT, "")
-        binding.searchEditText.setText(searchText)
-        viewModel.performSearch(searchText)
     }
 
     companion object {

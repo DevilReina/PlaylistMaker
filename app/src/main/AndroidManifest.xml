@@ -14,8 +14,8 @@
         android:theme="@style/Theme.PlaylistMaker"
         tools:targetApi="31">
         <activity
-            android:name=".main.ui.MainActivity"
-            android:theme="@style/Theme.PlaylistMaker.MainScreen"
+            android:name=".root.ui.RootActivity"
+            android:windowSoftInputMode="adjustNothing"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,34 +23,10 @@
             </intent-filter>
         </activity>
 
-        <!-- Остальные активности используют основную тему -->
-        <activity
-            android:name=".settings.ui.SettingsActivity"
-            android:theme="@style/Theme.PlaylistMaker"
-            android:exported="true" />
-
-        <activity
-            android:name=".media.ui.MediaLibraryActivity"
-            android:theme="@style/Theme.PlaylistMaker"
-            android:exported="true" />
-
         <activity
             android:name=".player.ui.PlayerActivity"
             android:theme="@style/Theme.PlaylistMaker"
             android:exported="true" />
-
-        <activity
-            android:name=".search.ui.SearchActivity"
-            android:theme="@style/Theme.PlaylistMaker"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-
-
 
     </application>
 

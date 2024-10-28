@@ -13,13 +13,6 @@
         android:layout_width="match_parent"
         android:gravity="center">
 
-        <ImageView
-            android:id="@+id/back"
-            android:layout_height="@dimen/dp_24"
-            android:layout_width="@dimen/dp_24"
-            android:background="@drawable/ic_arrow_back"
-            android:layout_marginEnd="12dp"/>
-
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
