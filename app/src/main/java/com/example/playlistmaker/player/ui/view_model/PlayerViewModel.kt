@@ -29,25 +29,22 @@ class PlayerViewModel(
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> get() = _isFavorite
 
-
-    private var isTrackFavorite = false
     fun onFavoriteClicked(track: Track) {
         viewModelScope.launch {
-            if (isTrackFavorite) {
+            if (_isFavorite.value == true) {
 
                 favoriteTracksInteractor.deleteFavoriteTrack(track)
-                isTrackFavorite = false
+                _isFavorite.postValue(false)
             } else {
 
                 favoriteTracksInteractor.addFavoriteTrack(track)
-                isTrackFavorite = true
+                _isFavorite.postValue(true)
             }
-            _isFavorite.postValue(isTrackFavorite)
         }
     }
     fun loadTrack(track: Track) {
         viewModelScope.launch {
-            isTrackFavorite = favoriteTracksInteractor.isTrackFavorite(track.trackId)
+            val isTrackFavorite = favoriteTracksInteractor.isTrackFavorite(track.trackId)
             _isFavorite.postValue(isTrackFavorite)
         }
     }

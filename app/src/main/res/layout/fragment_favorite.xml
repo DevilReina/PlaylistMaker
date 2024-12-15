@@ -21,7 +21,7 @@
         android:layout_marginTop="@dimen/dp_16"
         android:layout_weight="1"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_favorite" />
+        tools:listitem="@layout/item_track" />
     <ImageView
         android:id="@+id/errorImage"
         android:layout_width="@dimen/dp_120"

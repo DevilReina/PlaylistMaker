@@ -4,6 +4,7 @@ import java.io.Serializable
 
 data class Track (
     val trackId: Int,
+    val trackTimestamp: Long = System.currentTimeMillis(),
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Long,

@@ -16,7 +16,8 @@ class TrackDbConvertor {
             primaryGenreName = track.primaryGenreName,
             country = track.country,
             previewUrl = track.previewUrl,
-            trackId = track.trackId
+            trackId = track.trackId,
+            trackTimestamp = track.trackTimestamp
         )
     }
 
@@ -31,7 +32,8 @@ class TrackDbConvertor {
             primaryGenreName = track.primaryGenreName,
             country = track.country,
             previewUrl = track.previewUrl,
-            trackId = track.trackId
+            trackId = track.trackId,
+            trackTimestamp = track.trackTimestamp
         )
     }
 

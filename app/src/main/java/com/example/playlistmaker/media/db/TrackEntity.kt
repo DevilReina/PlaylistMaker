@@ -1,6 +1,5 @@
 package com.example.playlistmaker.media.db
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -8,6 +7,7 @@ import androidx.room.PrimaryKey
 data class TrackEntity(
     @PrimaryKey
     val trackId: Int,
+    val trackTimestamp: Long,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Long,

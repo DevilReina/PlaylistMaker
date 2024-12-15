@@ -17,6 +17,7 @@ class FavoriteViewModel(
     ): ViewModel() {
 
     private val favoriteTracksState = MutableLiveData<FavoriteTracksState>()
+
     fun observeState(): LiveData<FavoriteTracksState> = favoriteTracksState
 
     fun updateFavoriteTracks() {
@@ -39,7 +40,8 @@ class FavoriteViewModel(
         if (tracks.isEmpty()) {
             renderState(FavoriteTracksState.Empty(context.getString(R.string.text_error)))
         } else {
-            renderState(FavoriteTracksState.Content(tracks))
+            val sortedTracks = tracks.sortedByDescending { it.trackTimestamp }
+            renderState(FavoriteTracksState.Content(sortedTracks))
         }
     }
 
