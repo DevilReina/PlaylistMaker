@@ -8,7 +8,6 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -219,7 +218,7 @@ class SearchFragment : Fragment() {
 
     private fun onTrackClick(track: Track) {
         val intent = Intent(requireContext(), PlayerActivity::class.java)
-        intent.putExtra(App.TRACK_DT, Gson().toJson(track))
+        intent.putExtra(App.TRACK_DT, track)
         startActivity(intent)
         trackClickDebounce(track)
     }

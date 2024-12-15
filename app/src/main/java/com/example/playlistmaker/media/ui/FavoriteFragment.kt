@@ -97,7 +97,7 @@ class FavoriteFragment : Fragment() {
 
     private fun onTrackClick(track: Track) {
         val intent = Intent(requireContext(), PlayerActivity::class.java)
-        intent.putExtra(App.TRACK_DT, Gson().toJson(track))
+        intent.putExtra(App.TRACK_DT, track)
         startActivity(intent)
     }
 

@@ -6,7 +6,6 @@ import android.os.Bundle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.App.Companion.TRACK_DT
-import com.google.gson.Gson
 import java.util.Locale
 import androidx.core.view.isVisible
 import com.example.playlistmaker.R
@@ -37,31 +36,29 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         // Получение данных трека из Intent
-        val intentState = intent.extras
-        val trackData = intentState?.getString(TRACK_DT)
-        val track = Gson().fromJson(trackData, Track::class.java)
-        viewModel.loadTrack(track)
-        // Настройка UI с данными трека
-        setupTrackInfo(track)
+        val track: Track? = intent.getParcelableExtra(TRACK_DT)
 
-        // Подготовка плеера
-        viewModel.preparePlayer(track.previewUrl)
+        if (track != null) {
+            viewModel.loadTrack(track)
+            setupTrackInfo(track)
+            viewModel.preparePlayer(track.previewUrl)
 
-        // Подписка на обновления состояния плеера
-        observePlayerState()
-        observePlayerPosition()
+            // Подписка на обновления состояния плеера
+            observePlayerState()
+            observePlayerPosition()
 
-        // Управление воспроизведением
-        setupButtonListener()
+            // Управление воспроизведением
+            setupButtonListener()
 
-        // Слушатель для кнопки добавления в избранное
-        binding.likeButton.setOnClickListener {
-            viewModel.onFavoriteClicked(track) // Передаем выбранный трек
-        }
+            // Слушатель для кнопки добавления в избранное
+            binding.likeButton.setOnClickListener {
+                viewModel.onFavoriteClicked(track) // Передаем выбранный трек
+            }
 
-        viewModel.isFavorite.observe(this) { isFavorite ->
-            // Изменяем иконку в зависимости от состояния трека
-            updateFavoriteIcon(isFavorite)
+            viewModel.isFavorite.observe(this) { isFavorite ->
+                // Изменяем иконку в зависимости от состояния трека
+                updateFavoriteIcon(isFavorite)
+            }
         }
     }
 
