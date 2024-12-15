@@ -24,7 +24,7 @@
 
     <string name="clear_history">Очистить историю</string>
 
-    <string name="search_history">Вы смотрели</string>
+    <string name="search_history">Вы искали</string>
 
     <string name="album_image_text">Обложка альбома</string>
     <string name="duration">Длительность</string>
