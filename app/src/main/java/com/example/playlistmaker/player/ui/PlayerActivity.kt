@@ -40,7 +40,7 @@ class PlayerActivity : AppCompatActivity() {
         val intentState = intent.extras
         val trackData = intentState?.getString(TRACK_DT)
         val track = Gson().fromJson(trackData, Track::class.java)
-
+        viewModel.loadTrack(track)
         // Настройка UI с данными трека
         setupTrackInfo(track)
 
@@ -53,8 +53,25 @@ class PlayerActivity : AppCompatActivity() {
 
         // Управление воспроизведением
         setupButtonListener()
+
+        // Слушатель для кнопки добавления в избранное
+        binding.likeButton.setOnClickListener {
+            viewModel.onFavoriteClicked(track) // Передаем выбранный трек
+        }
+
+        viewModel.isFavorite.observe(this) { isFavorite ->
+            // Изменяем иконку в зависимости от состояния трека
+            updateFavoriteIcon(isFavorite)
+        }
     }
 
+    private fun updateFavoriteIcon(isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.likeButton.setImageResource(R.drawable.like_button_added)
+        } else {
+            binding.likeButton.setImageResource(R.drawable.like_button)
+        }
+    }
     private fun setupTrackInfo(track: Track) {
         val artworkUrl = track.artworkUrl100.replace("100x100bb.jpg", "512x512bb.jpg")
         Glide.with(this)

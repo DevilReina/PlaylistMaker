@@ -10,7 +10,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
-class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
+class TracksRepositoryImpl(
+    private val networkClient: NetworkClient
+) : TracksRepository {
     private val trackMapper = TrackMapper()
 
     override fun searchTracks(expression: String): Flow<List<Track>> {
@@ -19,9 +21,9 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
             val response = networkClient.doRequest(TracksRequest(expression))
 
             if (response.resultCode == 200) {
-                // Преобразуем результат
                 emit((response as TracksResponse).results.map { trackDto ->
-                    trackMapper.mapTrackDtoToDomain(trackDto) // Используем маппер (Маппинг из DTO в доменную модель)
+                    trackMapper.mapTrackDtoToDomain(trackDto)
+                // Используем маппер (Маппинг из DTO в доменную модель)
                 })
             } else if (response.resultCode == 500) {
                 throw IOException("Network Error") // Обработка ошибки сети
@@ -32,4 +34,6 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
             throw exception // Пробрасываем ошибку для дальнейшей обработки
         }
     }
+
 }
+

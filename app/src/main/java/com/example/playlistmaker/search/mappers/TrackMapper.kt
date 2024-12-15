@@ -14,7 +14,8 @@ class TrackMapper {
             releaseDate = trackDto.releaseDate ?: "Unknown Date",
             primaryGenreName = trackDto.primaryGenreName ?: "Unknown Genre",
             country = trackDto.country ?: "Unknown Country",
-            previewUrl = trackDto.previewUrl
+            previewUrl = trackDto.previewUrl,
+            trackId = trackDto.trackId
         )
     }
 }

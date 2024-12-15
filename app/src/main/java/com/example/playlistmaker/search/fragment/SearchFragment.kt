@@ -65,9 +65,12 @@ class SearchFragment : Fragment() {
         params.bottomMargin = navBarHeight
         binding.clearHistoryButton.layoutParams = params
 
-        trackAdapter = TrackAdapter(emptyList()) { track ->
-            onTrackClick(track)
-        }
+        trackAdapter = TrackAdapter(
+            emptyList(),
+            onTrackClick = { track ->
+                onTrackClick(track)
+            }
+        )
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
