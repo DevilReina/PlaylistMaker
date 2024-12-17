@@ -23,35 +23,45 @@ class SearchViewModel(
     private var lastSearchQuery: String? = null
     private var lastSearchResults: List<Track>? = null
     private var isShowingHistory = true
+    private var isLoading = false
 
     init {
         updateSearchHistory()
     }
 
     fun performSearch(query: String) {
-        lastSearchQuery = query
-        isShowingHistory = false
+        if (isLoading) return // Если идет загрузка, игнорируем новые запросы
 
-        // Проверяем, если запрос пустой
+        // Если запрос пустой, показываем историю
         if (query.isBlank()) {
-            // Если запрос пустой, показываем историю
-            updateSearchHistory()  // Отобразить историю
+            updateSearchHistory()
             return
         }
-        screenState.value = SearchScreenState.Loading
 
-        viewModelScope.launch {
-            try {
-                tracksInteractor.searchTracks(query).collect { tracks ->
-                    if (tracks.isNotEmpty()) {
-                        lastSearchResults = tracks
-                        screenState.postValue(SearchScreenState.ShowSearchResults(tracks))
-                    } else {
-                        screenState.postValue(SearchScreenState.Error(R.string.text_error))
+        // Проверка, если запрос отличается от последнего
+        if (query != lastSearchQuery) {
+            lastSearchQuery = query
+            isShowingHistory = false
+            isLoading = true  // Устанавливаем флаг загрузки
+
+
+            screenState.value = SearchScreenState.Loading
+
+            viewModelScope.launch {
+                try {
+                    tracksInteractor.searchTracks(query).collect { tracks ->
+                        if (tracks.isNotEmpty()) {
+                            lastSearchResults = tracks
+                            screenState.postValue(SearchScreenState.ShowSearchResults(tracks))
+                        } else {
+                            screenState.postValue(SearchScreenState.Error(R.string.text_error))
+                        }
                     }
+                } catch (e: IOException) {
+                    screenState.postValue(SearchScreenState.Error(R.string.internet_error))
+                } finally {
+                    isLoading = false  // Останавливаем загрузку после завершения поиска
                 }
-            } catch (e: IOException) {
-                screenState.postValue(SearchScreenState.Error(R.string.internet_error))
             }
         }
     }
@@ -86,7 +96,14 @@ class SearchViewModel(
         if (isShowingHistory) {
             updateSearchHistory()
         } else {
-            lastSearchQuery?.let { performSearch(it) }
+            // Загружаем данные, только если они ещё не были загружены
+            lastSearchQuery?.let {
+                if (lastSearchResults == null) {  // Если результатов нет, выполняем поиск
+                    performSearch(it)
+                } else {
+                    screenState.postValue(SearchScreenState.ShowSearchResults(lastSearchResults!!))
+                }
+            }
         }
     }
 }
