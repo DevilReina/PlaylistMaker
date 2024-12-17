@@ -44,8 +44,7 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.preparePlayer(track.previewUrl)
 
             // Подписка на обновления состояния плеера
-            observePlayerState()
-            observePlayerPosition()
+            observeViewModel()
 
             // Управление воспроизведением
             setupButtonListener()
@@ -55,9 +54,30 @@ class PlayerActivity : AppCompatActivity() {
                 viewModel.onFavoriteClicked(track) // Передаем выбранный трек
             }
 
-            viewModel.isFavorite.observe(this) { isFavorite ->
-                // Изменяем иконку в зависимости от состояния трека
-                updateFavoriteIcon(isFavorite)
+        }
+    }
+    private fun observeViewModel() {
+        viewModel.playerState.observe(this) { state ->
+            when (state) {
+                is PlayerState.Playing -> {
+                    binding.playButton.setImageResource(R.drawable.pause_button)
+                    binding.durationTime.text = state.currentPosition
+                }
+                is PlayerState.Paused -> {
+                    binding.playButton.setImageResource(R.drawable.play_button)
+                    binding.durationTime.text = state.currentPosition
+                }
+                PlayerState.Prepared -> {
+                    binding.playButton.setImageResource(R.drawable.play_button)
+                    binding.durationTime.text = "00:00"
+                }
+                PlayerState.Default -> {
+                    binding.playButton.setImageResource(R.drawable.play_button)
+                    binding.durationTime.text = "00:00"
+                }
+                is PlayerState.FavoriteState -> {
+                    updateFavoriteIcon(state.isFavorite)
+                }
             }
         }
     }
@@ -104,23 +124,6 @@ class PlayerActivity : AppCompatActivity() {
                     albumValue.text = track.collectionName
                 }
             }
-        }
-    }
-
-    private fun observePlayerState() {
-        viewModel.playerState.observe(this) { state ->
-            when (state) {
-                is PlayerState.Playing -> binding.playButton.setImageResource(R.drawable.pause_button)
-                is PlayerState.Paused, is PlayerState.Prepared -> binding.playButton.setImageResource(R.drawable.play_button)
-                else -> {binding.playButton.setImageResource(R.drawable.play_button)}
-            }
-
-        }
-    }
-
-    private fun observePlayerPosition() {
-        viewModel.currentPosition.observe(this) { position ->
-            binding.durationTime.text = position
         }
     }
 

@@ -1,8 +1,9 @@
 package com.example.playlistmaker.player.model
 
 sealed class PlayerState {
-    data object Default : PlayerState()
-    data object Prepared : PlayerState()
-    data object Playing : PlayerState()
-    data object Paused : PlayerState()
+    object Default : PlayerState()
+    object Prepared : PlayerState()
+    data class Playing(val currentPosition: String) : PlayerState()
+    data class Paused(val currentPosition: String) : PlayerState()
+    data class FavoriteState(val isFavorite: Boolean) : PlayerState()
 }

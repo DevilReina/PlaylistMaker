@@ -31,13 +31,15 @@ class SearchViewModel(
     fun performSearch(query: String) {
         lastSearchQuery = query
         isShowingHistory = false
-        screenState.value = SearchScreenState.Loading
+
         // Проверяем, если запрос пустой
         if (query.isBlank()) {
             // Если запрос пустой, показываем историю
             updateSearchHistory()  // Отобразить историю
             return
         }
+        screenState.value = SearchScreenState.Loading
+
         viewModelScope.launch {
             try {
                 tracksInteractor.searchTracks(query).collect { tracks ->

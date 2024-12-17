@@ -23,14 +23,14 @@ class PlayerViewModel(
     private val _playerState = MutableLiveData<PlayerState>()
     val playerState: LiveData<PlayerState> get() = _playerState
 
-    private val _currentPosition = MutableLiveData<String>()
-    val currentPosition: LiveData<String> get() = _currentPosition
+    private var updateJob: Job? = null
 
-    private val _isFavorite = MutableLiveData<Boolean>()
-    val isFavorite: LiveData<Boolean> get() = _isFavorite
+    init {
+        _playerState.value = PlayerState.Default
+    }
 
     fun onFavoriteClicked(track: Track) {
-        viewModelScope.launch {
+       /* viewModelScope.launch {
             if (_isFavorite.value == true) {
 
                 favoriteTracksInteractor.deleteFavoriteTrack(track)
@@ -40,18 +40,23 @@ class PlayerViewModel(
                 favoriteTracksInteractor.addFavoriteTrack(track)
                 _isFavorite.postValue(true)
             }
+        }*/
+        viewModelScope.launch {
+            val isCurrentlyFavorite = (_playerState.value as? PlayerState.FavoriteState)?.isFavorite ?: false
+            if (isCurrentlyFavorite) {
+                favoriteTracksInteractor.deleteFavoriteTrack(track)
+                _playerState.postValue(PlayerState.FavoriteState(false))
+            } else {
+                favoriteTracksInteractor.addFavoriteTrack(track)
+                _playerState.postValue(PlayerState.FavoriteState(true))
+            }
         }
     }
     fun loadTrack(track: Track) {
         viewModelScope.launch {
             val isTrackFavorite = favoriteTracksInteractor.isTrackFavorite(track.trackId)
-            _isFavorite.postValue(isTrackFavorite)
+            _playerState.postValue(PlayerState.FavoriteState(isTrackFavorite))
         }
-    }
-    private var updateJob: Job? = null
-
-    init {
-        _playerState.value = PlayerState.Default
     }
 
     fun preparePlayer(url: String?) {
@@ -61,20 +66,19 @@ class PlayerViewModel(
             }, onComplete = {
                 stopPositionUpdates()
                 _playerState.postValue(PlayerState.Prepared)
-                _currentPosition.postValue(formatTime(0))
             })
         }
     }
 
     fun startPlayer() {
         playerInteractor.startPlayer()
-        _playerState.value = PlayerState.Playing
+        _playerState.value = PlayerState.Playing(formatTime(playerInteractor.getCurrentPosition()))
         startPositionUpdates()
     }
 
     fun pausePlayer() {
         playerInteractor.pausePlayer()
-        _playerState.value = PlayerState.Paused
+        _playerState.value = PlayerState.Paused(formatTime(playerInteractor.getCurrentPosition()))
         stopPositionUpdates()
     }
 
@@ -88,8 +92,8 @@ class PlayerViewModel(
         updateJob = viewModelScope.launch {
             while (true) {
                 val position = playerInteractor.getCurrentPosition()
-                _currentPosition.postValue(formatTime(position))
-                delay(UPDATE_DELAY)
+                _playerState.postValue(PlayerState.Playing(formatTime(position)))
+                delay(UPDATE_DELAY_MILLS)
             }
         }
     }
@@ -104,6 +108,6 @@ class PlayerViewModel(
     }
 
     companion object {
-        private const val UPDATE_DELAY = 300L
+        private const val UPDATE_DELAY_MILLS = 300L
     }
 }
