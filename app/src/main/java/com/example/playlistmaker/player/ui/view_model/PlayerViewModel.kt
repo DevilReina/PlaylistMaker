@@ -30,17 +30,7 @@ class PlayerViewModel(
     }
 
     fun onFavoriteClicked(track: Track) {
-       /* viewModelScope.launch {
-            if (_isFavorite.value == true) {
 
-                favoriteTracksInteractor.deleteFavoriteTrack(track)
-                _isFavorite.postValue(false)
-            } else {
-
-                favoriteTracksInteractor.addFavoriteTrack(track)
-                _isFavorite.postValue(true)
-            }
-        }*/
         viewModelScope.launch {
             val isCurrentlyFavorite = (_playerState.value as? PlayerState.FavoriteState)?.isFavorite ?: false
             if (isCurrentlyFavorite) {
