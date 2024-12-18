@@ -34,7 +34,7 @@
             style="@style/SettingsText"
             android:layout_gravity="start"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_61"
             android:layout_weight="1"
             android:text="@string/dark_theme"
             android:textColor="@color/surface"/>
@@ -43,11 +43,7 @@
         <!-- Поделиться приложением -->
         <LinearLayout
             android:id="@+id/share_app_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="24dp">
+            style="@style/SettingsItem">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,11 +62,7 @@
         <!-- Написать в поддержку -->
         <LinearLayout
             android:id="@+id/contact_support_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="24dp">
+            style="@style/SettingsItem">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -89,11 +81,7 @@
         <!-- Пользовательское соглашение -->
         <LinearLayout
             android:id="@+id/user_agreement_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="24dp">
+            style="@style/SettingsItem">
 
             <TextView
                 android:layout_width="wrap_content"

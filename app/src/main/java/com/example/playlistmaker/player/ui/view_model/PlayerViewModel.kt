@@ -4,26 +4,49 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.media.domain.api.FavoriteTracksInteractor
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.model.PlayerState
+import com.example.playlistmaker.search.model.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewModel() {
+
+class PlayerViewModel(
+    private val playerInteractor: PlayerInteractor,
+    private val favoriteTracksInteractor: FavoriteTracksInteractor
+    ) : ViewModel() {
 
     private val _playerState = MutableLiveData<PlayerState>()
     val playerState: LiveData<PlayerState> get() = _playerState
-
-    private val _currentPosition = MutableLiveData<String>()
-    val currentPosition: LiveData<String> get() = _currentPosition
 
     private var updateJob: Job? = null
 
     init {
         _playerState.value = PlayerState.Default
+    }
+
+    fun onFavoriteClicked(track: Track) {
+
+        viewModelScope.launch {
+            val isCurrentlyFavorite = (_playerState.value as? PlayerState.FavoriteState)?.isFavorite ?: false
+            if (isCurrentlyFavorite) {
+                favoriteTracksInteractor.deleteFavoriteTrack(track)
+                _playerState.postValue(PlayerState.FavoriteState(false))
+            } else {
+                favoriteTracksInteractor.addFavoriteTrack(track)
+                _playerState.postValue(PlayerState.FavoriteState(true))
+            }
+        }
+    }
+    fun loadTrack(track: Track) {
+        viewModelScope.launch {
+            val isTrackFavorite = favoriteTracksInteractor.isTrackFavorite(track.trackId)
+            _playerState.postValue(PlayerState.FavoriteState(isTrackFavorite))
+        }
     }
 
     fun preparePlayer(url: String?) {
@@ -33,20 +56,19 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
             }, onComplete = {
                 stopPositionUpdates()
                 _playerState.postValue(PlayerState.Prepared)
-                _currentPosition.postValue(formatTime(0))
             })
         }
     }
 
     fun startPlayer() {
         playerInteractor.startPlayer()
-        _playerState.value = PlayerState.Playing
+        _playerState.value = PlayerState.Playing(formatTime(playerInteractor.getCurrentPosition()))
         startPositionUpdates()
     }
 
     fun pausePlayer() {
         playerInteractor.pausePlayer()
-        _playerState.value = PlayerState.Paused
+        _playerState.value = PlayerState.Paused(formatTime(playerInteractor.getCurrentPosition()))
         stopPositionUpdates()
     }
 
@@ -60,8 +82,8 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
         updateJob = viewModelScope.launch {
             while (true) {
                 val position = playerInteractor.getCurrentPosition()
-                _currentPosition.postValue(formatTime(position))
-                delay(UPDATE_DELAY)
+                _playerState.postValue(PlayerState.Playing(formatTime(position)))
+                delay(UPDATE_DELAY_MILLS)
             }
         }
     }
@@ -76,6 +98,6 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
     }
 
     companion object {
-        private const val UPDATE_DELAY = 300L
+        private const val UPDATE_DELAY_MILLS = 300L
     }
 }

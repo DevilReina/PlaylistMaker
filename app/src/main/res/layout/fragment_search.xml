@@ -52,7 +52,7 @@
             android:paddingHorizontal="@dimen/dp_12"
             android:singleLine="true"
             android:textColor="@android:color/black"
-            android:textColorHint="@color/search_hint"
+            android:textColorHint="@color/ic_srh_clr"
             app:cornerRadius="@dimen/dp_8" />
 
         <ImageButton
@@ -79,7 +79,8 @@
         android:text="@string/search_history"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:textColor="@color/surface"/>
 
 
     <LinearLayout

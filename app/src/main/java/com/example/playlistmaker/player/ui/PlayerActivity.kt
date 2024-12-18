@@ -6,7 +6,6 @@ import android.os.Bundle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.App.Companion.TRACK_DT
-import com.google.gson.Gson
 import java.util.Locale
 import androidx.core.view.isVisible
 import com.example.playlistmaker.R
@@ -37,24 +36,59 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         // Получение данных трека из Intent
-        val intentState = intent.extras
-        val trackData = intentState?.getString(TRACK_DT)
-        val track = Gson().fromJson(trackData, Track::class.java)
+        val track: Track? = intent.getParcelableExtra(TRACK_DT)
 
-        // Настройка UI с данными трека
-        setupTrackInfo(track)
+        if (track != null) {
+            viewModel.loadTrack(track)
+            setupTrackInfo(track)
+            viewModel.preparePlayer(track.previewUrl)
 
-        // Подготовка плеера
-        viewModel.preparePlayer(track.previewUrl)
+            // Подписка на обновления состояния плеера
+            observeViewModel()
 
-        // Подписка на обновления состояния плеера
-        observePlayerState()
-        observePlayerPosition()
+            // Управление воспроизведением
+            setupButtonListener()
 
-        // Управление воспроизведением
-        setupButtonListener()
+            // Слушатель для кнопки добавления в избранное
+            binding.likeButton.setOnClickListener {
+                viewModel.onFavoriteClicked(track) // Передаем выбранный трек
+            }
+
+        }
+    }
+    private fun observeViewModel() {
+        viewModel.playerState.observe(this) { state ->
+            when (state) {
+                is PlayerState.Playing -> {
+                    binding.playButton.setImageResource(R.drawable.pause_button)
+                    binding.durationTime.text = state.currentPosition
+                }
+                is PlayerState.Paused -> {
+                    binding.playButton.setImageResource(R.drawable.play_button)
+                    binding.durationTime.text = state.currentPosition
+                }
+                PlayerState.Prepared -> {
+                    binding.playButton.setImageResource(R.drawable.play_button)
+                    binding.durationTime.text = "00:00"
+                }
+                PlayerState.Default -> {
+                    binding.playButton.setImageResource(R.drawable.play_button)
+                    binding.durationTime.text = "00:00"
+                }
+                is PlayerState.FavoriteState -> {
+                    updateFavoriteIcon(state.isFavorite)
+                }
+            }
+        }
     }
 
+    private fun updateFavoriteIcon(isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.likeButton.setImageResource(R.drawable.like_button_added)
+        } else {
+            binding.likeButton.setImageResource(R.drawable.like_button)
+        }
+    }
     private fun setupTrackInfo(track: Track) {
         val artworkUrl = track.artworkUrl100.replace("100x100bb.jpg", "512x512bb.jpg")
         Glide.with(this)
@@ -90,23 +124,6 @@ class PlayerActivity : AppCompatActivity() {
                     albumValue.text = track.collectionName
                 }
             }
-        }
-    }
-
-    private fun observePlayerState() {
-        viewModel.playerState.observe(this) { state ->
-            when (state) {
-                is PlayerState.Playing -> binding.playButton.setImageResource(R.drawable.pause_button)
-                is PlayerState.Paused, is PlayerState.Prepared -> binding.playButton.setImageResource(R.drawable.play_button)
-                else -> {binding.playButton.setImageResource(R.drawable.play_button)}
-            }
-
-        }
-    }
-
-    private fun observePlayerPosition() {
-        viewModel.currentPosition.observe(this) { position ->
-            binding.durationTime.text = position
         }
     }
 

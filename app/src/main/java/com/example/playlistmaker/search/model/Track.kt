@@ -1,8 +1,13 @@
 package com.example.playlistmaker.search.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.io.Serializable
 
+@Parcelize
 data class Track (
+    val trackId: Int,
+    val trackTimestamp: Long = System.currentTimeMillis(),
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Long,
@@ -11,5 +16,5 @@ data class Track (
     val releaseDate: String,
     val primaryGenreName: String,
     val country: String,
-    val previewUrl: String?
-): Serializable
+    val previewUrl: String?,
+): Parcelable

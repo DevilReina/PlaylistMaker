@@ -8,7 +8,7 @@
         <item name="colorOnSecondary">@color/main_bg</item>
         <item name="colorOnPrimary">@color/searth_clr</item>
         <item name="colorControlNormal">@color/navigation_icon_color</item>
-
+        <item name="colorAccent">@color/accent</item>
 
         <!-- Цвета статус-бара -->
         <item name="android:statusBarColor">@color/statusBarColorLight</item>
@@ -22,5 +22,6 @@
     <style name="Theme.PlaylistMaker.MainScreen" parent="Base.Theme.PlaylistMaker">
         <item name="android:statusBarColor">@color/main_bg</item> <!-- Цвет статус-бара для главного экрана -->
         <item name="android:windowLightStatusBar">false</item> <!-- Темный текст в статус-баре -->
+
     </style>
 </resources>
