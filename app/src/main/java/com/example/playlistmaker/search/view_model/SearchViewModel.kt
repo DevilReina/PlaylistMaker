@@ -23,27 +23,21 @@ class SearchViewModel(
     private var lastSearchQuery: String? = null
     private var lastSearchResults: List<Track>? = null
     private var isShowingHistory = true
-    private var isLoading = false
 
     init {
         updateSearchHistory()
     }
 
     fun performSearch(query: String) {
-        if (isLoading) return // Если идет загрузка, игнорируем новые запросы
 
-        // Если запрос пустой, показываем историю
-        if (query.isBlank()) {
-            updateSearchHistory()
-            return
-        }
-
-        // Проверка, если запрос отличается от последнего
-        if (query != lastSearchQuery) {
             lastSearchQuery = query
             isShowingHistory = false
-            isLoading = true  // Устанавливаем флаг загрузки
 
+            // Если запрос пустой, показываем историю
+            if (query.isBlank()) {
+                updateSearchHistory()
+                return
+            }
 
             screenState.value = SearchScreenState.Loading
 
@@ -59,11 +53,9 @@ class SearchViewModel(
                     }
                 } catch (e: IOException) {
                     screenState.postValue(SearchScreenState.Error(R.string.internet_error))
-                } finally {
-                    isLoading = false  // Останавливаем загрузку после завершения поиска
                 }
             }
-        }
+
     }
 
     fun updateSearchHistory() {
@@ -82,6 +74,7 @@ class SearchViewModel(
     fun saveTrackToHistory(track: Track) {
         viewModelScope.launch {
             searchHistoryInteractor.saveTrack(track)
+            restoreLastState()
         }
     }
 
@@ -96,14 +89,8 @@ class SearchViewModel(
         if (isShowingHistory) {
             updateSearchHistory()
         } else {
-            // Загружаем данные, только если они ещё не были загружены
-            lastSearchQuery?.let {
-                if (lastSearchResults == null) {  // Если результатов нет, выполняем поиск
-                    performSearch(it)
-                } else {
-                    screenState.postValue(SearchScreenState.ShowSearchResults(lastSearchResults!!))
-                }
-            }
+            lastSearchQuery?.let { performSearch(it) }
         }
     }
+
 }

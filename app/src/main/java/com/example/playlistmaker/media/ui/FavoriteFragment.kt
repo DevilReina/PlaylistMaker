@@ -15,7 +15,6 @@ import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.adapters.TrackAdapter
 import com.example.playlistmaker.media.model.FavoriteTracksState
 import com.example.playlistmaker.search.model.Track
-import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteFragment : Fragment() {

@@ -138,10 +138,12 @@ class SearchFragment : Fragment() {
         }
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 
     private fun observeViewModel() {
         viewModel.getScreenState().observe(viewLifecycleOwner) { state ->
@@ -217,15 +219,20 @@ class SearchFragment : Fragment() {
     }
 
     private fun onTrackClick(track: Track) {
+        trackClickDebounce(track)
         val intent = Intent(requireContext(), PlayerActivity::class.java)
         intent.putExtra(App.TRACK_DT, track)
         startActivity(intent)
-        trackClickDebounce(track)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(KEY_SEARCH_TEXT, searchText)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.restoreLastState()
     }
 
     companion object {

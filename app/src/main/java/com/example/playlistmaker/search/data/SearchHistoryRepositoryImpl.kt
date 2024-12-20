@@ -15,10 +15,10 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
 
     override suspend fun saveTrack(track: Track) {
         val history = getHistoryInternal().toMutableList()
-        history.remove(track)
+        history.removeIf { it.trackId == track.trackId }
         history.add(0, track)
         if (history.size > MAX_HISTORY_SIZE) {
-            history.removeAt(history.size - 1)
+            history.removeAt(history.lastIndex)
         }
         saveHistory(history)
     }

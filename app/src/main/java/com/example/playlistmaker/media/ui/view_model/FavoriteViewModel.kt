@@ -21,7 +21,7 @@ class FavoriteViewModel(
     fun observeState(): LiveData<FavoriteTracksState> = favoriteTracksState
 
     fun updateFavoriteTracks() {
-        renderState(FavoriteTracksState.Loading)
+
         viewModelScope.launch {
             favoriteTracksInteractor.favoriteTracks().collect { tracks ->
                 processResult(tracks)
