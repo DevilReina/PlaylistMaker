@@ -2,11 +2,13 @@
     <string name="app_name">Playlist Maker</string>
     <string name="media_btn">Медиатека</string>
     <string name="settings_btn">Настройки</string>
+    <string name="new_playlist_btn">Новый плейлист</string>
     <string name="back_button">Назад</string>
     <string name="dark_theme">Темная тема</string>
     <string name="share_btn">Поделиться приложением</string>
     <string name="support_btn">Написать в поддержку</string>
     <string name="agreement_btn">Пользовательское соглашение</string>
+    <string name="create_btn">Создать</string>
 
     <string name="share_message">practicum.yandex.ru/learn/android-developer/</string>
     <string name="support_email">devilreinatv@yandex.ru</string>
@@ -39,4 +41,18 @@
     <string name="new_playlist">Новый плейлист</string>
     <string name="favorite">Избранные треки</string>
     <string name="playlist">Плейлисты</string>
+
+    <string name="field_title">Название*</string>
+    <string name="description_title">Описание</string>
+
+
+    <plurals name="tracks_plurals">
+        <item quantity="zero">%1$d треков</item>
+        <item quantity="one">%1$d трек</item>
+        <item quantity="two">%1$d трека</item>
+        <item quantity="few">%1$d трека</item>
+        <item quantity="many">%1$d треков</item>
+        <item quantity="other">%1$d треков</item>
+    </plurals>
+
 </resources>

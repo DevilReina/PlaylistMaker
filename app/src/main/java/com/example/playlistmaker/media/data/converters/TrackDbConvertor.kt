@@ -36,6 +36,5 @@ class TrackDbConvertor {
             trackTimestamp = track.trackTimestamp
         )
     }
-
 }
 

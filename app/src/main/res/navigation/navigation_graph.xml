@@ -9,9 +9,7 @@
         android:id="@+id/searchFragment"
         android:name="com.example.playlistmaker.search.fragment.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/fragment_search">
-
-    </fragment>
+        tools:layout="@layout/fragment_search"/>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.playlistmaker.settings.fragment.SettingsFragment"

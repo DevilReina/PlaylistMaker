@@ -5,5 +5,4 @@ sealed class PlayerState {
     object Prepared : PlayerState()
     data class Playing(val currentPosition: String) : PlayerState()
     data class Paused(val currentPosition: String) : PlayerState()
-    data class FavoriteState(val isFavorite: Boolean) : PlayerState()
 }

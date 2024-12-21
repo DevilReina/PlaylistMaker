@@ -17,12 +17,14 @@ import androidx.lifecycle.lifecycleScope
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
+import com.example.playlistmaker.player.ui.PlayerActivity
+
 import com.example.playlistmaker.search.model.Track
 import com.example.playlistmaker.search.adapters.TrackAdapter
 import com.example.playlistmaker.search.model.SearchScreenState
 import com.example.playlistmaker.search.view_model.SearchViewModel
-import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.utils.debounce
+
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 

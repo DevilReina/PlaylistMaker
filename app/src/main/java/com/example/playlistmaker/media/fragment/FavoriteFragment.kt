@@ -1,4 +1,4 @@
-package com.example.playlistmaker.media.ui
+package com.example.playlistmaker.media.fragment
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -11,9 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.App
 import com.example.playlistmaker.databinding.FragmentFavoriteBinding
 import com.example.playlistmaker.media.ui.view_model.FavoriteViewModel
-import com.example.playlistmaker.player.ui.PlayerActivity
+
 import com.example.playlistmaker.search.adapters.TrackAdapter
 import com.example.playlistmaker.media.model.FavoriteTracksState
+import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.model.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

@@ -15,6 +15,12 @@
     <color name="ic_active_clr">#3772E7</color>
     <color name="ic_inactive_clr">#1A1B22</color>
     <color name="accent">#3772E7</color>
+    <color name="cover_frame">#AEAFB4</color>
+    <color name="grey">#AEAFB4</color>
+    <color name="blue">#3772E7</color>
+    <color name="text_field_blue">#3772E7</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#1A1B22</color>
 
     <color name="switch_thumb_color_light">#FF6200EE</color>
     <color name="switch_thumb_color_dark">#FF6200EE</color>

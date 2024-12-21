@@ -1,42 +1,54 @@
-package com.example.playlistmaker.player.ui
+/*
+package com.example.playlistmaker.player.fragment
 
-import android.icu.text.SimpleDateFormat
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.App.Companion.TRACK_DT
-import java.util.Locale
-import androidx.core.view.isVisible
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.player.model.PlayerState
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.example.playlistmaker.search.model.Track
 import com.example.playlistmaker.utils.dpToPx
+import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerFragment : Fragment() {
 
-    private lateinit var binding: ActivityPlayerBinding
+    private var _binding: FragmentPlayerBinding? = null
+    private val binding
+        get() = _binding!!
 
-    // ViewModel
-    private val viewModel by viewModel<PlayerViewModel>()
+    private val viewModel: PlayerViewModel by viewModel<PlayerViewModel> {
+        parametersOf(Gson().fromJson(requireArguments().getString(TRACK_KEY), Track::class.java))
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        // Инициализация View Binding
-        binding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
-        // Назад
-        binding.back.setOnClickListener {
-            finish()
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        // Получение данных трека из Intent
-        val track: Track? = intent.getParcelableExtra(TRACK_DT)
+        val track = Gson().fromJson(requireArguments().getString(TRACK_KEY), Track::class.java)
 
         if (track != null) {
             viewModel.loadTrack(track)
@@ -56,27 +68,30 @@ class PlayerActivity : AppCompatActivity() {
 
         }
 
-        viewModel.isFavorite.observe(this) { isFavorite ->
+        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
             // Изменяем иконку в зависимости от состояния трека
             updateFavoriteIcon(isFavorite)
         }
     }
 
     private fun observeViewModel() {
-        viewModel.playerState.observe(this) { state ->
+        viewModel.playerState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is PlayerState.Playing -> {
                     binding.playButton.setImageResource(R.drawable.pause_button)
                     binding.durationTime.text = state.currentPosition
                 }
+
                 is PlayerState.Paused -> {
                     binding.playButton.setImageResource(R.drawable.play_button)
                     binding.durationTime.text = state.currentPosition
                 }
+
                 PlayerState.Prepared -> {
                     binding.playButton.setImageResource(R.drawable.play_button)
                     binding.durationTime.text = "00:00"
                 }
+
                 PlayerState.Default -> {
                     binding.playButton.setImageResource(R.drawable.play_button)
                     binding.durationTime.text = "00:00"
@@ -93,6 +108,7 @@ class PlayerActivity : AppCompatActivity() {
             binding.likeButton.setImageResource(R.drawable.like_button)
         }
     }
+
     private fun setupTrackInfo(track: Track) {
         val artworkUrl = track.artworkUrl100.replace("100x100bb.jpg", "512x512bb.jpg")
         Glide.with(this)
@@ -106,7 +122,8 @@ class PlayerActivity : AppCompatActivity() {
         with(binding) {
             trackName.text = track.trackName
             artist.text = track.artistName
-            durationValue.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
+            durationValue.text =
+                SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
             yearValue.text = track.releaseDate.substring(0, 4)
             genreValue.text = track.primaryGenreName
             country.text = track.country
@@ -140,12 +157,14 @@ class PlayerActivity : AppCompatActivity() {
         super.onDestroy()
         viewModel.releasePlayer()
     }
+
     // Управление воспроизведением и паузой
     private fun setupButtonListener() {
         binding.playButton.setOnClickListener {
             playbackControl()
         }
     }
+
     private fun playbackControl() {
         when (viewModel.playerState.value) {
             is PlayerState.Playing -> viewModel.pausePlayer()
@@ -153,4 +172,7 @@ class PlayerActivity : AppCompatActivity() {
             else -> Unit
         }
     }
-}
+    companion object {
+        private const val TRACK_KEY = "TRACK"
+    }
+}*/
