@@ -14,16 +14,19 @@ import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.player.fragment.PlayerFragment
+
 
 import com.example.playlistmaker.search.model.Track
 import com.example.playlistmaker.search.adapters.TrackAdapter
 import com.example.playlistmaker.search.model.SearchScreenState
 import com.example.playlistmaker.search.view_model.SearchViewModel
 import com.example.playlistmaker.utils.debounce
+import com.google.gson.Gson
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -222,9 +225,10 @@ class SearchFragment : Fragment() {
 
     private fun onTrackClick(track: Track) {
         trackClickDebounce(track)
-        val intent = Intent(requireContext(), PlayerActivity::class.java)
-        intent.putExtra(App.TRACK_DT, track)
-        startActivity(intent)
+        // Создаём действие для навигации
+        val action = SearchFragmentDirections.actionSearchFragmentToPlayerFragment(track)
+        // Навигация через NavController
+        findNavController().navigate(action)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

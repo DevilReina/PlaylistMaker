@@ -7,6 +7,7 @@ import com.example.playlistmaker.di.dataModule
 import com.example.playlistmaker.di.interactorModule
 import com.example.playlistmaker.di.repositoryModule
 import com.example.playlistmaker.di.viewModelModule
+import com.example.playlistmaker.media.db.AppDatabase
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
@@ -17,7 +18,7 @@ class App:Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-
+        AppDatabase.getDatabase(this)
         startKoin {
             androidContext(this@App)
             modules(dataModule, repositoryModule, interactorModule, viewModelModule)
