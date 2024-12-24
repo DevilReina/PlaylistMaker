@@ -7,16 +7,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.media.domain.api.FavoriteTracksInteractor
 import com.example.playlistmaker.media.domain.api.PlaylistInteractor
 import com.example.playlistmaker.media.model.Playlist
-import com.example.playlistmaker.media.model.AddTrackToPlaylistState
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.model.PlayerState
 import com.example.playlistmaker.search.model.Track
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,15 +35,12 @@ class PlayerViewModel(
     private val playlistsLiveData = MutableLiveData<List<Playlist>>()
     fun getPlaylistsLiveData(): LiveData<List<Playlist>> = playlistsLiveData
 
-    private val addTrackToPlaylistLiveData = MutableLiveData<AddTrackToPlaylistState>()
-    fun getAddTrackToPlaylistLiveData(): LiveData<AddTrackToPlaylistState> = addTrackToPlaylistLiveData
 
     private var updateJob: Job? = null
 
     init {
-        getPlaylists()
-
         _playerState.value = PlayerState.Default
+        getPlaylists()
     }
 
     fun onFavoriteClicked(track: Track) {
@@ -123,42 +119,19 @@ class PlayerViewModel(
         }
     }
 
-    private var currentTrack: Track? = null
 
-    fun setTrack(track: Track) {
-        currentTrack = track
-    }
 
-    fun addTrackToPlaylist(playlist: Playlist) {
-        // Проверяем, есть ли доступный трек
-        val track = currentTrack ?: return // Если трек не найден, выходим из метода
-
-        val itemType = object : TypeToken<ArrayList<String>>() {}.type
-        var listOfTracks = Gson().fromJson<ArrayList<String>>(playlist.tracks, itemType)
-
-        if (listOfTracks.isNullOrEmpty()) listOfTracks = ArrayList()
-
-        if (listOfTracks.contains(track.trackId.toString())) {
-            addTrackToPlaylistLiveData.value = AddTrackToPlaylistState.TrackNotAdded(playlist.title)
-        } else {
-            viewModelScope.launch(Dispatchers.IO) {
-                if (!listOfTracks.contains(track.trackId.toString())) {
-                    // Добавляем трек в плейлист
-                    playlistInteractor.addTrackToPlaylist(track, playlist)
-                    addTrackToPlaylistLiveData.postValue(AddTrackToPlaylistState.TrackAdded(playlist.title))
-
-                    // Обновляем список плейлистов
-                    getPlaylists()
-                } else {
-                    addTrackToPlaylistLiveData.postValue(
-                        AddTrackToPlaylistState.TrackNotAdded(playlist.title)
-                    )
-                }
-                addTrackToPlaylistLiveData.postValue(AddTrackToPlaylistState.Default)
+    fun addTrackToPlaylist(track: Track, playlistId: Playlist) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                playlistInteractor.addTrackToPlaylist(track, playlistId)
+                getPlaylists()
             }
         }
     }
-
+    fun getPlaylistsMutableData(): MutableLiveData<List<Playlist>> {
+        return playlistsLiveData
+    }
 
 
     companion object {

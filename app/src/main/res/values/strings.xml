@@ -60,5 +60,8 @@
         <item quantity="many">%1$d треков</item>
         <item quantity="other">%1$d треков</item>
     </plurals>
-
+    <string name="title_dialog">Завершить создание плейлиста?</string>
+    <string name="message_dialog">Все несохраненные данные будут потеряны</string>
+    <string name="cancel_dialog">Отмена</string>
+    <string name="ok_dialog">Завершить</string>
 </resources>

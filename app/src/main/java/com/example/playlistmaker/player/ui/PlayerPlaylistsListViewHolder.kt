@@ -12,27 +12,37 @@ import com.example.playlistmaker.media.model.Playlist
 import com.example.playlistmaker.utils.dpToPx
 
 
-class PlayerPlaylistsListViewHolder(private val itemView: View, private val callback: (playlist: Playlist)->Unit) : RecyclerView.ViewHolder(itemView) {
+class PlayerPlaylistsListViewHolder(
+    view: View
+) : RecyclerView.ViewHolder(view) {
 
     private val playlistCover = itemView.findViewById<ImageView>(R.id.playerPlaylistCover)
     private val playlistTitle = itemView.findViewById<TextView>(R.id.playerPlaylistTitle)
     private val playlistNumberOfTracks = itemView.findViewById<TextView>(R.id.playerPlaylistNumberOfTracks)
 
-    fun bind(playlist: Playlist) {
-
-        Glide.with(itemView.context)
+    fun bind(
+        playlist: Playlist,
+        onPlaylistClickListener: OnPlaylistClickListener?
+        ) {
+        Glide.with(itemView)
             .load(playlist.imageUri)
             .placeholder(R.drawable.placeholder)
-            .transform(CenterCrop(),  RoundedCorners(dpToPx(2f, itemView.context)))
+            .transform(CenterCrop(), RoundedCorners(dpToPx(2f, itemView.context)))
             .into(playlistCover)
 
         playlistTitle.text = playlist.title
-
-        playlistNumberOfTracks.text = itemView.context.resources.getQuantityString(R.plurals.tracks_plurals, playlist.numberOfTracks.toInt(), playlist.numberOfTracks.toInt())
+        playlistNumberOfTracks.text = itemView.context.resources.getQuantityString(
+            R.plurals.tracks_plurals,
+            playlist.numberOfTracks.toInt(),
+            playlist.numberOfTracks.toInt()
+        )
 
         itemView.setOnClickListener {
-            callback.invoke(playlist)
+            onPlaylistClickListener?.onPlaylistClick(playlist)
+            
         }
     }
-
+    interface OnPlaylistClickListener {
+        fun onPlaylistClick(playlist: Playlist)
+    }
 }

@@ -12,7 +12,7 @@ import com.example.playlistmaker.media.db.dao.PlaylistDao
 import com.example.playlistmaker.media.db.dao.TrackDao
 
 
-@Database(version = 3, entities = [TrackEntity::class, PlaylistEntity::class])
+@Database(version = 4, entities = [TrackEntity::class, PlaylistEntity::class])
 
 abstract class AppDatabase : RoomDatabase() {
 
@@ -21,7 +21,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
 
-        val MIGRATION_2_3 = object : Migration(2, 3) {
+        val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE playlist_entity ADD COLUMN new_column INTEGER DEFAULT 0 NOT NULL")
             }
@@ -38,7 +38,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "app-database"
                 )
-                    .addMigrations(MIGRATION_2_3)
+                    .addMigrations(MIGRATION_3_4)
                     .build()
                 INSTANCE = instance
                 instance

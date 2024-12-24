@@ -9,8 +9,8 @@ data class PlaylistEntity(
     @PrimaryKey(autoGenerate = true)
     val playlistId: Long = 0,
     val playlistTitle: String,
-    val playlistDescription: String,
-    val playlistCoverUri: String,
-    val tracks: String,
+    val playlistDescription: String?,
+    val playlistCoverUri: String?,
+    val tracks: String?,
     val numberOfTracks: Long
 )

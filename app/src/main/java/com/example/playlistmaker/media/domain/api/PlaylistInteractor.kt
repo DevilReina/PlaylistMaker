@@ -10,8 +10,6 @@ interface PlaylistInteractor {
 
     suspend fun updatePlaylist(playlist: Playlist)
 
-    suspend fun saveImageToPrivateStorage(uri: String): String
-
     suspend fun getAllPlaylists(): Flow<List<Playlist>>
 
     suspend fun addTrackToPlaylist(track: Track, playlist: Playlist)

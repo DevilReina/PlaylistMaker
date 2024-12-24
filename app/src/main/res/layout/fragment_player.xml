@@ -14,8 +14,8 @@
         android:orientation="vertical"
         android:paddingHorizontal="24dp"
         android:paddingVertical="16dp"
-        android:background="@color/background"
-        tools:context=".player.ui.PlayerActivity">
+        android:background="?attr/colorOnBackground"
+        tools:context=".player.fragment.PlayerFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -237,7 +237,7 @@
         android:layout_height="500dp"
         android:background="@drawable/add_track_to_playlist_background"
         app:behavior_hideable="true"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="?attr/colorOnBackground"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <View
@@ -248,7 +248,7 @@
             android:layout_marginTop="8dp"
             android:layout_width="50dp"
             android:layout_height="4dp"
-            android:background="@color/white"
+            android:background="@color/view"
             />
 
         <TextView
@@ -259,9 +259,7 @@
             android:layout_marginTop="30dp"
             android:text="@string/add_to_playlist"
             android:gravity="center"
-            android:textColor="@color/black"
-            android:fontFamily="ys_display_medium"
-            android:textSize="19sp"
+            style="@style/TitleSheet"
             />
 
         <Button
@@ -273,8 +271,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="28dp"
             android:text="@string/new_playlist"
-            android:backgroundTint="@color/black"
-            android:textColor="@color/white"
+            style="@style/newPlaylistBtn"
             />
 
         <androidx.recyclerview.widget.RecyclerView
