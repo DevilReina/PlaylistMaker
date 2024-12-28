@@ -1,5 +1,6 @@
 package com.example.playlistmaker.player.ui.view_model
 
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,7 +11,6 @@ import com.example.playlistmaker.media.model.Playlist
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.model.PlayerState
 import com.example.playlistmaker.search.model.Track
-
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -34,6 +34,8 @@ class PlayerViewModel(
 
     private val playlistsLiveData = MutableLiveData<List<Playlist>>()
     fun getPlaylistsLiveData(): LiveData<List<Playlist>> = playlistsLiveData
+
+    private val _addTrackStatus = MutableLiveData<Boolean>()
 
 
     private var updateJob: Job? = null
@@ -121,11 +123,31 @@ class PlayerViewModel(
 
 
 
-    fun addTrackToPlaylist(track: Track, playlistId: Playlist) {
+    fun addTrackToPlaylist(track: Track, playlist: Playlist) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                playlistInteractor.addTrackToPlaylist(track, playlistId)
-                getPlaylists()
+                // Проверяем, есть ли трек в плейлисте
+                val trackIds = playlist.tracks
+                    ?.replace("[", "") // Убираем открывающую квадратную скобку
+                    ?.replace("]", "") // Убираем закрывающую квадратную скобку
+                    ?.split(",")       // Разделяем строку по запятым
+                    ?.mapNotNull { it.trim().toLongOrNull() } // Преобразуем в Long
+                    ?: emptyList() // Если список пустой, возвращаем пустой список
+                if (trackIds.contains(track.trackId.toLong())) {
+                    // Трек уже есть в плейлисте
+                    _addTrackStatus.postValue(false)
+                    return@withContext
+                }
+
+                try {
+                    // Добавляем трек в плейлист через интерактор
+                    playlistInteractor.addTrackToPlaylist(track, playlist)
+
+                    getPlaylists()
+                    _addTrackStatus.postValue(true)
+                } catch (e: Exception) {
+                    _addTrackStatus.postValue(false)
+                }
             }
         }
     }

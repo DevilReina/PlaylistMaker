@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import com.example.playlistmaker.media.data.converters.PlaylistDbConverter
 import com.example.playlistmaker.media.db.AppDatabase
+import com.example.playlistmaker.media.db.TrackInPlaylistEntity
+import com.example.playlistmaker.media.db.dao.TrackInPlaylistDao
 import com.example.playlistmaker.media.domain.api.PlaylistRepository
 import com.example.playlistmaker.media.model.Playlist
 import com.example.playlistmaker.search.model.Track
@@ -16,6 +18,7 @@ import kotlinx.coroutines.flow.flow
 class PlaylistRepositoryImpl(
     private val appDatabase: AppDatabase,
     private val playlistConverter: PlaylistDbConverter,
+    private val trackInPlaylistDao: TrackInPlaylistDao,
     private val gson: Gson
 ) : PlaylistRepository {
 
@@ -58,6 +61,9 @@ class PlaylistRepositoryImpl(
                     numberOfTracks = tracksList.size.toLong()
                 )
                 appDatabase.playlistDao().updatePlaylist(updatedPlaylist)
+
+                val trackEntity = mapTrackToTrackInPlaylistEntity(track)
+                trackInPlaylistDao.insertTrack(trackEntity)
             }
         }
     }
@@ -70,5 +76,22 @@ class PlaylistRepositoryImpl(
     // Десериализация строки в список треков
     private fun deserializeTracks(tracks: String): List<Long> {
         return gson.fromJson(tracks, object : TypeToken<List<Long>>() {}.type) ?: emptyList()
+    }
+
+    // Маппинг трека в сущность таблицы `track_in_playlist`
+    private fun mapTrackToTrackInPlaylistEntity(track: Track): TrackInPlaylistEntity {
+        return TrackInPlaylistEntity(
+            trackId = track.trackId,
+            trackTimestamp = System.currentTimeMillis(),
+            trackName = track.trackName,
+            artistName = track.artistName,
+            trackTimeMillis = track.trackTimeMillis,
+            artworkUrl100 = track.artworkUrl100,
+            collectionName = track.collectionName,
+            releaseDate = track.releaseDate,
+            primaryGenreName = track.primaryGenreName,
+            country = track.country,
+            previewUrl = track.previewUrl
+        )
     }
 }

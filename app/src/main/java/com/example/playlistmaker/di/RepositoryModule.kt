@@ -21,7 +21,7 @@ import org.koin.dsl.module
 val repositoryModule = module {
 
     factory<PlaylistRepository> {
-        PlaylistRepositoryImpl(get(), get(), get())
+        PlaylistRepositoryImpl(get(), get(), get(), get())
     }
     single<TracksRepository> {
         TracksRepositoryImpl(get())
