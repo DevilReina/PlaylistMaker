@@ -103,7 +103,7 @@
                 android:id="@+id/durationTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="64dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center_horizontal"
                 android:textColor="@color/surface"
                 android:textSize="14sp"
@@ -237,52 +237,50 @@
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:background="@drawable/add_track_to_playlist_background"
-        app:behavior_hideable="true"
         android:backgroundTint="?attr/colorOnBackground"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="invisible">
 
         <View
             android:id="@+id/topView"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="8dp"
             android:layout_width="50dp"
             android:layout_height="4dp"
+            android:layout_marginTop="8dp"
             android:background="@color/view"
-            />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/addToPlaylistTitle"
+            style="@style/TitleSheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/topView"
             android:layout_marginTop="30dp"
-            android:text="@string/add_to_playlist"
             android:gravity="center"
-            style="@style/TitleSheet"
-            />
+            android:text="@string/add_to_playlist"
+            app:layout_constraintTop_toBottomOf="@id/topView" />
 
         <Button
             android:id="@+id/newPlaylistButton"
+            style="@style/newPlaylistBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/addToPlaylistTitle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="28dp"
             android:text="@string/new_playlist"
-            style="@style/newPlaylistBtn"
-            />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addToPlaylistTitle" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/playlistsList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/newPlaylistButton"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginTop="24dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/newPlaylistButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
