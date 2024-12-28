@@ -15,9 +15,13 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.example.playlistmaker.media.ui.view_model.CreatePlaylistViewModel
+import com.example.playlistmaker.utils.dpToPx
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -54,6 +58,7 @@ class CreatePlaylistFragment : Fragment() {
         setupCreateButton()
         setupImagePicker()
         handleEditTexts()
+
     }
 
     private fun setupConfirmationDialog() {
@@ -89,7 +94,17 @@ class CreatePlaylistFragment : Fragment() {
         val pickMedia = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             if (uri != null) {
                 binding.playlistCover.setImageURI(uri)
+
+                Glide.with(this)
+                    .load(uri)
+                    .transform(
+                        CenterCrop(),
+                        RoundedCorners(dpToPx(8f, requireContext()))
+                    )
+                    .into(binding.playlistCover)
+
                 imageUri = uri
+
             } else {
                 Toast.makeText(requireContext(), "Ничего не выбрано", Toast.LENGTH_SHORT).show()
             }
@@ -102,20 +117,43 @@ class CreatePlaylistFragment : Fragment() {
 
     private fun handleEditTexts() {
         val titleEditText = binding.playlistTitle
-        val descriptionEditText = binding.playlistDescription
+        val titleTopHint = binding.playlistTitleTopHint
 
+        val descriptionEditText = binding.playlistDescription
+        val descriptionTopHint = binding.playlistDescriptionTopHint
+
+        titleTopHint.visibility = View.INVISIBLE
+        descriptionTopHint.visibility = View.INVISIBLE
+
+        binding.createButton.isEnabled = false
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.createButton.isEnabled = !titleEditText.text.isNullOrEmpty()
+                val hasText = !s.isNullOrBlank()
+                titleEditText.isActivated = hasText
+                titleTopHint.visibility = if (s.isNullOrBlank()) View.INVISIBLE else View.VISIBLE
+                binding.createButton.isEnabled = !s.isNullOrBlank()
             }
 
             override fun afterTextChanged(s: Editable?) {}
         }
 
+        val descriptionTextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val hasText = !s.isNullOrBlank()
+                descriptionEditText.isActivated = hasText
+                descriptionTopHint.visibility = if (s.isNullOrBlank()) View.INVISIBLE else View.VISIBLE
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        }
+
+
         titleEditText.addTextChangedListener(textWatcher)
-        descriptionEditText.addTextChangedListener(textWatcher)
+        descriptionEditText.addTextChangedListener(descriptionTextWatcher)
     }
 
     private fun createPlayList() {

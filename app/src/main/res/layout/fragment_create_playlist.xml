@@ -109,7 +109,8 @@
         android:paddingEnd="4dp"
         android:text="@string/field_title"
         android:textColor="@color/text_field_blue"
-        style="@style/NewPlaylistHint"/>
+        style="@style/NewPlaylistHint"
+        />
 
     <EditText
         android:id="@+id/playlistDescription"
@@ -140,6 +141,7 @@
         android:paddingEnd="4dp"
         android:text="@string/description_title"
         android:textColor="@color/text_field_blue"
-        style="@style/NewPlaylistHint"/>
+        style="@style/NewPlaylistHint"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

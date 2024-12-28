@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
@@ -233,8 +234,10 @@ class PlayerFragment : Fragment(), PlayerPlaylistsListViewHolder.OnPlaylistClick
             .load(artworkUrl)
             .placeholder(R.drawable.placeholder_player)
             .error(R.drawable.placeholder_player)
-            .centerCrop()
-            .transform(RoundedCorners(dpToPx(8.0F, this)))
+            .transform(
+                CenterCrop(),
+                RoundedCorners(dpToPx(8f, requireContext()))
+            )
             .into(binding.albumImage)
 
         with(binding) {
