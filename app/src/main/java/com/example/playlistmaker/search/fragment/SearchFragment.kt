@@ -14,15 +14,20 @@ import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
+import com.example.playlistmaker.player.fragment.PlayerFragment
+
+
 import com.example.playlistmaker.search.model.Track
 import com.example.playlistmaker.search.adapters.TrackAdapter
 import com.example.playlistmaker.search.model.SearchScreenState
 import com.example.playlistmaker.search.view_model.SearchViewModel
-import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.utils.debounce
+import com.google.gson.Gson
+
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -138,10 +143,12 @@ class SearchFragment : Fragment() {
         }
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 
     private fun observeViewModel() {
         viewModel.getScreenState().observe(viewLifecycleOwner) { state ->
@@ -217,15 +224,21 @@ class SearchFragment : Fragment() {
     }
 
     private fun onTrackClick(track: Track) {
-        val intent = Intent(requireContext(), PlayerActivity::class.java)
-        intent.putExtra(App.TRACK_DT, track)
-        startActivity(intent)
         trackClickDebounce(track)
+        // Создаём действие для навигации
+        val action = SearchFragmentDirections.actionSearchFragmentToPlayerFragment(track)
+        // Навигация через NavController
+        findNavController().navigate(action)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(KEY_SEARCH_TEXT, searchText)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.restoreLastState()
     }
 
     companion object {

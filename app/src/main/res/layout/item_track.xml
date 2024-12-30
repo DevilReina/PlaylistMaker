@@ -20,7 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="20"
         android:orientation="vertical"
-        android:paddingStart="@dimen/dp_16"
         android:layout_marginStart="@dimen/dp_8"
         android:layout_gravity="center">
 

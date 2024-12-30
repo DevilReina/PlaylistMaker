@@ -1,22 +1,20 @@
-package com.example.playlistmaker.media.ui
+package com.example.playlistmaker.media.fragment
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.App
+
 import com.example.playlistmaker.databinding.FragmentFavoriteBinding
 import com.example.playlistmaker.media.ui.view_model.FavoriteViewModel
-import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.adapters.TrackAdapter
 import com.example.playlistmaker.media.model.FavoriteTracksState
 import com.example.playlistmaker.search.model.Track
-import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.navigation.fragment.findNavController
 
 class FavoriteFragment : Fragment() {
     private var _binding: FragmentFavoriteBinding? = null
@@ -96,9 +94,8 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun onTrackClick(track: Track) {
-        val intent = Intent(requireContext(), PlayerActivity::class.java)
-        intent.putExtra(App.TRACK_DT, track)
-        startActivity(intent)
+        val action = MediaLibraryFragmentDirections.actionMediaFragmentToPlayerFragment(track)
+        requireParentFragment().findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

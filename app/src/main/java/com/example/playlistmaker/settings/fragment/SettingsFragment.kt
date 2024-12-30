@@ -30,8 +30,8 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Устанавливаем начальное состояние темы
-        val isDarkThemeEnabled = viewModel.getThemeSettings().isDarkTheme
-        binding.themeSwitcher.isChecked = isDarkThemeEnabled
+
+        binding.themeSwitcher.isChecked =  viewModel.getThemeSettings().isDarkTheme
 
         // Обработчик переключения темы
         binding.themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
@@ -59,6 +59,7 @@ class SettingsFragment : Fragment() {
             viewModel.clearActionCommand()
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
