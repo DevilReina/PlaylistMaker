@@ -37,6 +37,7 @@ class SearchFragment : Fragment() {
     private lateinit var trackClickDebounce: (Track) -> Unit
     private lateinit var trackSearchDebounce: (Unit) -> Unit
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
