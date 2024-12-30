@@ -14,20 +14,15 @@ import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
-import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.player.fragment.PlayerFragment
-
-
 import com.example.playlistmaker.search.model.Track
 import com.example.playlistmaker.search.adapters.TrackAdapter
 import com.example.playlistmaker.search.model.SearchScreenState
 import com.example.playlistmaker.search.view_model.SearchViewModel
 import com.example.playlistmaker.utils.debounce
-import com.google.gson.Gson
-
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -55,7 +50,7 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        trackClickDebounce = debounce(SEARCH_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
+        trackClickDebounce = debounce(SEARCH_DEBOUNCE_DELAY, viewModel.viewModelScope, false) {
             viewModel.saveTrackToHistory(it)
         }
         trackSearchDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
@@ -244,6 +239,6 @@ class SearchFragment : Fragment() {
     companion object {
         private const val KEY_SEARCH_TEXT = "SEARCH_TEXT"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val CLICK_DEBOUNCE_DELAY = 100L
     }
 }
