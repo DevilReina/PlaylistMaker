@@ -30,12 +30,41 @@
         <action
             android:id="@+id/action_mediaFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_mediaFragment_to_openAlbumFragment"
+            app:destination="@id/openAlbumFragment" />
+
     </fragment>
+
+    <fragment
+        android:id="@+id/openAlbumFragment"
+        android:name="com.example.playlistmaker.media.fragment.OpenPlaylistFragment">
+        <action
+            android:id="@+id/action_openAlbumFragment_to_createPlaylistFragment"
+            app:destination="@id/createPlaylistFragment" />
+        <action
+            android:id="@+id/action_openAlbumFragment_to_mediaFragment"
+            app:destination="@id/mediaFragment" />
+        <action
+            android:id="@+id/action_openAlbumFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+
+        <argument
+            android:name="playlistId"
+            app:argType="long" />
+    </fragment>
+
+
 
     <fragment
         android:id="@+id/createPlaylistFragment"
         android:name="com.example.playlistmaker.media.fragment.CreatePlaylistFragment"
-        android:label="CreatePlaylistFragment" />
+        android:label="CreatePlaylistFragment" >
+
+    </fragment>
+
+
+
     <fragment
         android:id="@+id/playerFragment"
         android:name="com.example.playlistmaker.player.fragment.PlayerFragment"

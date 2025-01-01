@@ -27,6 +27,9 @@
     <color name="view">#E6E8EB</color>
     <color name="switch_one">#E6E8EB</color>
     <color name="switch_two">#AEAFB4</color>
+    <color name="count_tracks_color">#AEAFB4</color>
+    <color name="alert_background_color">#FFFFFF</color>
+    <color name="alert_btn_color">#1A1B22</color>
 
     <color name="switch_thumb_color_light">#FF6200EE</color>
     <color name="switch_thumb_color_dark">#FF6200EE</color>

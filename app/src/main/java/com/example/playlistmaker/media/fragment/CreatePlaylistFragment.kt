@@ -1,5 +1,6 @@
 package com.example.playlistmaker.media.fragment
 
+import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -10,9 +11,11 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -20,6 +23,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
+import com.example.playlistmaker.media.model.Playlist
 import com.example.playlistmaker.media.ui.view_model.CreatePlaylistViewModel
 import com.example.playlistmaker.utils.dpToPx
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -35,7 +39,8 @@ class CreatePlaylistFragment : Fragment() {
     private val viewModel by viewModel<CreatePlaylistViewModel>()
 
     private var imageUri: Uri? = null
-
+    private var playlistToEdit: Playlist? = null
+    
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -53,12 +58,44 @@ class CreatePlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        playlistToEdit = arguments?.getParcelable("playlistToEdit")
+
+        if (playlistToEdit != null) {
+            // Заполняем поля данными существующего плейлиста
+            binding.playlistTitle.setText(playlistToEdit!!.title)
+            binding.playlistDescription.setText(playlistToEdit!!.description)
+            Glide.with(this)
+                .load(playlistToEdit!!.imageUri)
+                .transform(
+                    CenterCrop(),
+                    RoundedCorners(dpToPx(8f, requireContext()))
+                )
+                .into(binding.playlistCover)
+
+            binding.createButton.text = getString(R.string.save)  // Кнопка "Сохранить"
+            binding.topPanel.findViewById<TextView>(R.id.title_playlist).text = getString(R.string.edit_playlist)  // Заголовок "Редактировать"
+        } else {
+            // Для создания нового плейлиста
+            binding.createButton.text = getString(R.string.create)  // Кнопка "Создать"
+            binding.topPanel.findViewById<TextView>(R.id.title_playlist).text = getString(R.string.create_playlist)  // Заголовок "Создать"
+        }
+
+
+        binding.createButton.isEnabled = !binding.playlistTitle.text.isNullOrBlank()
+
+        binding.playlistTitle.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.createButton.isEnabled = !binding.playlistTitle.text.isNullOrBlank()
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
         setupConfirmationDialog()
         setupBackNavigation()
         setupCreateButton()
         setupImagePicker()
         handleEditTexts()
-
     }
 
     private fun setupConfirmationDialog() {
@@ -86,9 +123,40 @@ class CreatePlaylistFragment : Fragment() {
 
     private fun setupCreateButton() {
         binding.createButton.setOnClickListener {
-            createPlayList()
+            if (playlistToEdit != null) {
+                savePlaylistChanges()  // Сохраняем изменения для редактируемого плейлиста
+            } else {
+                createPlayList()  // Создаём новый плейлист
+            }
         }
     }
+
+    private fun savePlaylistChanges() {
+        val title = binding.playlistTitle.text.toString()
+        val description = binding.playlistDescription.text.toString()
+
+        // Преобразуем Uri в строку для сохранения пути
+        val imageUriPath = if (imageUri != null) {
+            saveImageToPrivateStorage(imageUri!!)
+        } else {
+            playlistToEdit?.imageUri  // Используем старую картинку, если новая не выбрана
+        }
+
+        val updatedPlaylist = playlistToEdit?.copy(
+            title = title,
+            description = description,
+            imageUri = imageUriPath
+        )
+
+        updatedPlaylist?.let {
+            viewModel.updatePlaylist(it)
+        }
+
+        Toast.makeText(requireContext(), "Плейлист \"$title\" обновлен", Toast.LENGTH_LONG).show()
+        findNavController().navigateUp()  // Возвращаемся на предыдущий экран
+    }
+
+
 
     private fun setupImagePicker() {
         val pickMedia = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -203,14 +271,19 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     private fun showConfirmationDialog() {
-        MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.CustomAlertDialogTheme)
             .setTitle(getString(R.string.close_playlist_dialog_title))
             .setMessage(getString(R.string.close_playlist_dialog_message))
             .setNeutralButton(getString(R.string.cancel), null)
             .setPositiveButton(getString(R.string.finish)) { _, _ ->
                 findNavController().navigateUp()
             }
-            .show()
+            .create()
+            dialog.setOnShowListener {
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(ContextCompat.getColor(requireContext(), R.color.alert_btn_color))
+                dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(ContextCompat.getColor(requireContext(), R.color.alert_btn_color))
+        }
+        dialog.show()
     }
 }
 

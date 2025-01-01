@@ -15,6 +15,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
@@ -50,10 +51,11 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        trackClickDebounce = debounce(SEARCH_DEBOUNCE_DELAY, viewModel.viewModelScope, false) {
+        trackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewModel.viewModelScope, false) {
             viewModel.saveTrackToHistory(it)
         }
-        trackSearchDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
+
+        trackSearchDebounce = debounce(SEARCH_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
             viewModel.performSearch(binding.searchEditText.text.toString())
         }
 
@@ -239,6 +241,6 @@ class SearchFragment : Fragment() {
     companion object {
         private const val KEY_SEARCH_TEXT = "SEARCH_TEXT"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private const val CLICK_DEBOUNCE_DELAY = 100L
+        private const val CLICK_DEBOUNCE_DELAY = 10L
     }
 }

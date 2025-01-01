@@ -27,6 +27,6 @@ class PlaylistViewHolder(itemView: View) : ViewHolder(itemView) {
 
         playlistTitle.text = playlist.title
 
-        playlistNumberOfTracks.text = itemView.context.resources.getQuantityString(R.plurals.tracks_plurals, playlist.numberOfTracks.toInt(), playlist.numberOfTracks.toInt())
+        playlistNumberOfTracks.text = itemView.context.resources.getQuantityString(R.plurals.tracks_count, playlist.numberOfTracks.toInt(), playlist.numberOfTracks.toInt())
     }
 }

@@ -9,7 +9,7 @@ class PlaylistDbConverter {
     fun map(playlist: Playlist): PlaylistEntity {
         Log.d("START MAP1", "START MAP1 playlist: $playlist")
         return PlaylistEntity(
-            0,
+            playlist.id ?: 0,
             playlist.title,
             playlist.description,
             playlist.imageUri,

@@ -27,6 +27,8 @@ class MediaLibraryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val initialTabIndex = arguments?.getInt(ARG_TAB_INDEX) ?: 0 // По умолчанию открываем "Favorite"
+
         binding.viewPager.adapter = MediaLibraryAdapter(
             fragmentManager = childFragmentManager,
             lifecycle = lifecycle
@@ -39,6 +41,8 @@ class MediaLibraryFragment : Fragment() {
             }
         }
         tabMediator.attach()
+        // Устанавливаем начальную вкладку
+        binding.viewPager.setCurrentItem(initialTabIndex, false)
     }
 
     override fun onDestroyView() {
@@ -47,5 +51,9 @@ class MediaLibraryFragment : Fragment() {
         }
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val ARG_TAB_INDEX = "tab_index"
     }
 }
