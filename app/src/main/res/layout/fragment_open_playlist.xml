@@ -1,0 +1,311 @@
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_grey">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context=".player.fragment.OpenPlaylistFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:layout_marginStart="@dimen/dp_24"
+                android:layout_marginTop="@dimen/dp_24"
+                android:background="@drawable/ic_arrow_album_back"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:translationZ="99dp"
+                />
+
+            <ImageView
+                android:id="@+id/albumImage"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+
+                android:contentDescription="@string/album_image_text"
+                android:scaleType="centerCrop"
+                android:src="@drawable/placeholder_player"
+                app:layout_constraintDimensionRatio="1:1"
+                tools:ignore="MissingConstraints" />
+
+            <TextView
+                android:id="@+id/playlistName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_16"
+                android:layout_marginTop="26dp"
+                android:fontFamily="@font/ys_display_bold"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textFontWeight="700"
+                android:textSize="24sp"
+                app:layout_constraintTop_toBottomOf="@id/albumImage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="Название альбома"
+                tools:ignore="MissingConstraints" />
+
+            <TextView
+                android:id="@+id/playlistDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="6dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/ys_display_regular"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textFontWeight="400"
+                android:textSize="@dimen/sp_19"
+                app:layout_constraintTop_toBottomOf="@id/playlistName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="2099" />
+
+            <TextView
+                android:id="@+id/playlistDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_16"
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/ys_display_regular"
+                android:textColor="@color/black"
+                android:textFontWeight="400"
+                android:textSize="@dimen/sp_19"
+                app:layout_constraintTop_toBottomOf="@id/playlistDescription"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="999 минут" />
+
+            <ImageView
+                android:id="@+id/dot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/playlist_dot"
+                app:layout_constraintBottom_toBottomOf="@id/playlistDuration"
+                app:layout_constraintStart_toEndOf="@id/playlistDuration"
+                app:layout_constraintTop_toTopOf="@id/playlistDuration" />
+
+            <TextView
+                android:id="@+id/playlistNumbersOfTracks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_16"
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/ys_display_regular"
+                android:textColor="@color/black"
+                android:textFontWeight="400"
+                android:textSize="@dimen/sp_19"
+                app:layout_constraintTop_toBottomOf="@id/playlistDescription"
+                app:layout_constraintStart_toEndOf="@id/playlistDuration"
+                tools:text="999 треков" />
+
+            <ImageView
+                android:id="@+id/share_album"
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:layout_marginStart="@dimen/dp_12"
+                android:layout_marginTop="@dimen/dp_12"
+                android:background="@drawable/ic_share_album"
+                app:layout_constraintTop_toBottomOf="@id/playlistDuration"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+            <ImageView
+                android:id="@+id/album_dots"
+                android:layout_width="@dimen/dp_24"
+                android:layout_height="@dimen/dp_24"
+                android:layout_marginStart="56dp"
+                android:layout_marginTop="@dimen/dp_12"
+                android:background="@drawable/three_dots"
+                app:layout_constraintTop_toBottomOf="@id/playlistDuration"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/share_album"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="gone" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/add_track_to_playlist_background"
+        android:backgroundTint="?attr/colorOnBackground"
+        app:behavior_hideable="false"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="visible">
+
+        <View
+            android:id="@+id/topView"
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/albumList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/dp_13"
+            android:layout_marginEnd="@dimen/dp_13"
+            android:layout_marginTop="24dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/overlay2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="gone" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomSheet2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:background="@drawable/add_track_to_playlist_background"
+        android:backgroundTint="?attr/colorOnBackground"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="invisible">
+
+        <View
+            android:id="@+id/topView2"
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/playerPlaylistContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topView2"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/playerPlaylistCover"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="@dimen/dp_13"
+                android:src="@drawable/placeholder_player" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_8"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/playerPlaylistTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/BottomSheetPlaylistName"
+                    tools:text="Название альбома" />
+
+                <TextView
+                    android:id="@+id/playerPlaylistNumberOfTracks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/BottomSheetPlaylistNumberOfTracks"
+                    tools:text="количество треков" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/share_album2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="40dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/ys_display_regular"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/surface"
+            android:textFontWeight="400"
+            android:textSize="@dimen/sp_19"
+            app:layout_constraintTop_toBottomOf="@id/playerPlaylistContainer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="Поделиться" />
+
+        <TextView
+            android:id="@+id/edit_album"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="40dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/ys_display_regular"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/surface"
+            android:textFontWeight="400"
+            android:textSize="@dimen/sp_19"
+            app:layout_constraintTop_toBottomOf="@id/share_album2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/edit_album_text" />
+        <TextView
+            android:id="@+id/delete_album"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="40dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/ys_display_regular"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/surface"
+            android:textFontWeight="400"
+            android:textSize="@dimen/sp_19"
+            app:layout_constraintTop_toBottomOf="@id/edit_album"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/delete_playlist_text" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

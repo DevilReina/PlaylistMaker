@@ -24,4 +24,23 @@
         <item name="android:windowLightStatusBar">false</item> <!-- Темный текст в статус-баре -->
 
     </style>
+
+    <!-- Тема для диалогового окна -->
+    <style name="CustomAlertDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <!-- Фоновый цвет окна -->
+        <item name="colorSurface">@color/alert_background_color</item>
+        <!-- Цвет текста заголовка -->
+        <item name="colorOnSurface">@color/surface</item>
+
+    </style>
+
+    <!-- Тема для диалогового окна альбома -->
+    <style name="CustomAlertDialogThemeAlbum" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <!-- Фоновый цвет окна -->
+        <item name="colorSurface">@color/white</item>
+        <!-- Цвет текста заголовка -->
+        <item name="colorOnSurface">@color/black</item>
+
+    </style>
+
 </resources>

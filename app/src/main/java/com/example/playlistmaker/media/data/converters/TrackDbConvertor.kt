@@ -1,7 +1,10 @@
 package com.example.playlistmaker.media.data.converters
 
+import androidx.room.TypeConverter
 import com.example.playlistmaker.media.db.TrackEntity
 import com.example.playlistmaker.search.model.Track
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class TrackDbConvertor {
 
@@ -35,6 +38,18 @@ class TrackDbConvertor {
             trackId = track.trackId,
             trackTimestamp = track.trackTimestamp
         )
+    }
+    private val gson = Gson()
+
+    @TypeConverter
+    fun fromTracksList(tracks: List<Track>): String {
+        return gson.toJson(tracks)
+    }
+
+    @TypeConverter
+    fun toTracksList(data: String): List<Track> {
+        val listType = object : TypeToken<List<Track>>() {}.type
+        return gson.fromJson(data, listType)
     }
 }
 

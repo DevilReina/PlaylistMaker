@@ -29,6 +29,10 @@ class RootActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id) {
+                R.id.openAlbumFragment -> {
+                    binding.bottomNavigationView.isVisible = false
+                    binding.separator.isVisible = false
+                }
                 R.id.createPlaylistFragment -> {
                     binding.bottomNavigationView.isVisible = false
                     binding.separator.isVisible = false
