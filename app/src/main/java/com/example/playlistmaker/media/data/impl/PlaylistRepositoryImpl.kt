@@ -103,7 +103,11 @@ class PlaylistRepositoryImpl(
             trackIds.remove(track.trackId)
 
             // Преобразуем обратно в строку
-            val updatedTracks = Gson().toJson(trackIds)
+            val updatedTracks = if (trackIds.isEmpty()) {
+                null // Если список треков пуст, устанавливаем null
+            } else {
+                Gson().toJson(trackIds)
+            }
 
             val updatedPlaylist = it.copy(
                 tracks = updatedTracks,
@@ -114,10 +118,15 @@ class PlaylistRepositoryImpl(
             updatePlaylist(updatedPlaylist)
 
             // Проверяем, используется ли трек в других плейлистах
-            val trackCount  = appDatabase.trackInPlaylistDao().getTrackById(track.trackId)
+            val playlistsWithTrack = appDatabase.playlistDao().getAllPlaylists().filter { playlistEntity ->
+                val playlistTrackIds = playlistEntity.tracks?.let { jsonTracks ->
+                    Gson().fromJson<List<Int>>(jsonTracks, object : TypeToken<List<Int>>() {}.type)
+                } ?: emptyList()
+                playlistTrackIds.contains(track.trackId)
+            }
 
             // Если трек больше нигде не используется, удаляем его из базы
-            if (trackCount == null) {
+            if (playlistsWithTrack.isEmpty()) {
                 appDatabase.trackInPlaylistDao().deleteTrack(track.trackId)
             }
 
