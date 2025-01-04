@@ -40,7 +40,10 @@ class CreatePlaylistFragment : Fragment() {
 
     private var imageUri: Uri? = null
     private var playlistToEdit: Playlist? = null
-    
+    private var initialTitle: String? = null
+    private var initialDescription: String? = null
+    private var initialImageUri: String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,6 +64,10 @@ class CreatePlaylistFragment : Fragment() {
         playlistToEdit = arguments?.getParcelable("playlistToEdit")
 
         if (playlistToEdit != null) {
+            initialTitle = playlistToEdit!!.title
+            initialDescription = playlistToEdit!!.description
+            initialImageUri = playlistToEdit!!.imageUri
+
             // Заполняем поля данными существующего плейлиста
             binding.playlistTitle.setText(playlistToEdit!!.title)
             binding.playlistDescription.setText(playlistToEdit!!.description)
@@ -75,6 +82,9 @@ class CreatePlaylistFragment : Fragment() {
             binding.createButton.text = getString(R.string.save)  // Кнопка "Сохранить"
             binding.topPanel.findViewById<TextView>(R.id.title_playlist).text = getString(R.string.edit_playlist)  // Заголовок "Редактировать"
         } else {
+            initialTitle = ""
+            initialDescription = ""
+            initialImageUri = null
             // Для создания нового плейлиста
             binding.createButton.text = getString(R.string.create)  // Кнопка "Создать"
             binding.topPanel.findViewById<TextView>(R.id.title_playlist).text = getString(R.string.create_playlist)  // Заголовок "Создать"
@@ -265,9 +275,11 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     private fun isAnyFieldSet(): Boolean {
-        return !binding.playlistTitle.text.isNullOrBlank() ||
-                !binding.playlistDescription.text.isNullOrBlank() ||
-                imageUri != null
+        val currentTitle = binding.playlistTitle.text.toString()
+        val currentDescription = binding.playlistDescription.text.toString()
+        return currentTitle != initialTitle ||
+                currentDescription != initialDescription ||
+                (imageUri?.toString() ?: initialImageUri) != initialImageUri
     }
 
     private fun showConfirmationDialog() {

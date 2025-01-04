@@ -89,7 +89,28 @@ class PlaylistRepositoryImpl(
     }
 
     override suspend fun deletePlaylistById(playlist: Playlist) {
-        appDatabase.playlistDao().deletePlaylist(playlist.id ?: 0)
+        val playlistEntity = appDatabase.playlistDao().getPlaylistById(playlist.id ?: 0)
+        playlistEntity?.let {
+
+            val trackIds = playlistEntity.tracks?.let { tracksJson ->
+                deserializeTracks(tracksJson)
+            } ?: emptyList()
+
+
+            appDatabase.playlistDao().deletePlaylist(playlist.id ?: 0)
+
+
+            val allPlaylists = appDatabase.playlistDao().getAllPlaylists()
+            val usedTrackIds = allPlaylists.flatMap { otherPlaylist ->
+                otherPlaylist.tracks?.let { deserializeTracks(it) } ?: emptyList()
+            }.toSet()
+
+
+            val unusedTrackIds = trackIds.filter { it !in usedTrackIds }
+            unusedTrackIds.forEach { trackId ->
+                appDatabase.trackInPlaylistDao().deleteTrack(trackId.toInt())
+            }
+        }
     }
 
     override suspend fun removeTrackFromPlaylist(track: Track, playlistId: Long) {
