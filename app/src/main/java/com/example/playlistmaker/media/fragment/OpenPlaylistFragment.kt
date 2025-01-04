@@ -252,9 +252,17 @@ class OpenPlaylistFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun observeViewModel() {
         viewModel.playlistTracks.observe(viewLifecycleOwner) { tracks ->
-            val totalDuration = calculateTotalDuration(tracks ?: emptyList())
+
+            val isEmpty = tracks.isNullOrEmpty()
+            binding.emptyPlaylistMessage.visibility = if (isEmpty) View.VISIBLE else View.GONE
+            binding.albumList.visibility = if (isEmpty) View.GONE else View.VISIBLE
+
+            val sortedTracks = tracks.orEmpty().sortedByDescending { it.trackTimestamp }
+            adapter.submitList(sortedTracks)
+
+            val totalDuration = calculateTotalDuration(sortedTracks)
             binding.playlistDuration.text = "$totalDuration минут"
-            adapter.submitList(tracks)
+
         }
         viewModel.playlist.observe(viewLifecycleOwner) { playlist ->
             playlist?.let {
@@ -277,7 +285,7 @@ class OpenPlaylistFragment : Fragment() {
                 binding.playlistDuration.text = if (totalDuration > 0) {
                     "$totalDuration минут"
                 } else {
-                    "Продолжительность неизвестна"
+                    "0 минут"
                 }
 
                 // Устанавливаем информацию в BottomSheet
