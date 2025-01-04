@@ -47,6 +47,7 @@
                 tools:text="Название"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:maxEms="10"
                 />
 
             <ImageView
