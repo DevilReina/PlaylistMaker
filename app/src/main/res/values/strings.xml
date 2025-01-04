@@ -70,5 +70,6 @@
     <string name="edit_playlist">Редактировать</string>
     <string name="create">Создать</string>
     <string name="create_playlist">Создать</string>
+    <string name="no_tracks_album_text">В этом плейлисте пока нет треков.</string>
 
 </resources>

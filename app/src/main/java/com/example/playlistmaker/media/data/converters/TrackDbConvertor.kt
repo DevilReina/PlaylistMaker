@@ -1,7 +1,7 @@
 package com.example.playlistmaker.media.data.converters
 
 import androidx.room.TypeConverter
-import com.example.playlistmaker.media.db.TrackEntity
+import com.example.playlistmaker.media.data.db.entities.TrackEntity
 import com.example.playlistmaker.search.model.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

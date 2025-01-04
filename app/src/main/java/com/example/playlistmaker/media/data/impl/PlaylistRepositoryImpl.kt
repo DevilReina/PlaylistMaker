@@ -2,9 +2,9 @@ package com.example.playlistmaker.media.data.impl
 
 import android.util.Log
 import com.example.playlistmaker.media.data.converters.PlaylistDbConverter
-import com.example.playlistmaker.media.db.AppDatabase
-import com.example.playlistmaker.media.db.TrackInPlaylistEntity
-import com.example.playlistmaker.media.db.dao.TrackInPlaylistDao
+import com.example.playlistmaker.media.data.db.AppDatabase
+import com.example.playlistmaker.media.data.db.entities.TrackInPlaylistEntity
+import com.example.playlistmaker.media.data.dao.TrackInPlaylistDao
 import com.example.playlistmaker.media.domain.api.PlaylistRepository
 import com.example.playlistmaker.media.model.Playlist
 import com.example.playlistmaker.search.model.Track

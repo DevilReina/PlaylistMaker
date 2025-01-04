@@ -4,8 +4,8 @@ import android.content.Context
 import android.media.MediaPlayer
 import androidx.room.Room
 import com.example.playlistmaker.media.data.converters.PlaylistDbConverter
-import com.example.playlistmaker.media.db.AppDatabase
-import com.example.playlistmaker.media.db.AppDatabase.Companion.MIGRATION_4_5
+import com.example.playlistmaker.media.data.db.AppDatabase
+import com.example.playlistmaker.media.data.db.AppDatabase.Companion.MIGRATION_4_5
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.network.ApiService
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient

@@ -1,7 +1,7 @@
 package com.example.playlistmaker.media.data.converters
 
 import android.util.Log
-import com.example.playlistmaker.media.db.PlaylistEntity
+import com.example.playlistmaker.media.data.db.entities.PlaylistEntity
 import com.example.playlistmaker.media.model.Playlist
 
 class PlaylistDbConverter {

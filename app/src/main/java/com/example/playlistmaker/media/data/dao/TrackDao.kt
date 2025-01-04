@@ -1,10 +1,10 @@
-package com.example.playlistmaker.media.db.dao
+package com.example.playlistmaker.media.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.playlistmaker.media.db.TrackEntity
+import com.example.playlistmaker.media.data.db.entities.TrackEntity
 
 @Dao
 interface TrackDao {

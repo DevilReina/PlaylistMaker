@@ -1,11 +1,11 @@
-package com.example.playlistmaker.media.db.dao
+package com.example.playlistmaker.media.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.playlistmaker.media.db.PlaylistEntity
+import com.example.playlistmaker.media.data.db.entities.PlaylistEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
