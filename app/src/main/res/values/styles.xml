@@ -159,7 +159,7 @@
     </style>
 
     <style name="BottomSheetPlaylistNumberOfTracks">
-        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColor">@color/count_tracks_color</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textSize">11sp</item>
         <item name="android:maxLines">1</item>
@@ -179,4 +179,7 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">500</item>
     </style>
+
+
+
 </resources>

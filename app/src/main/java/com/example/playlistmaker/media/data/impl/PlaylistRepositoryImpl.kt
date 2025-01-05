@@ -1,11 +1,10 @@
 package com.example.playlistmaker.media.data.impl
 
-import android.content.Context
 import android.util.Log
 import com.example.playlistmaker.media.data.converters.PlaylistDbConverter
-import com.example.playlistmaker.media.db.AppDatabase
-import com.example.playlistmaker.media.db.TrackInPlaylistEntity
-import com.example.playlistmaker.media.db.dao.TrackInPlaylistDao
+import com.example.playlistmaker.media.data.db.AppDatabase
+import com.example.playlistmaker.media.data.db.entities.TrackInPlaylistEntity
+import com.example.playlistmaker.media.data.dao.TrackInPlaylistDao
 import com.example.playlistmaker.media.domain.api.PlaylistRepository
 import com.example.playlistmaker.media.model.Playlist
 import com.example.playlistmaker.search.model.Track
@@ -67,6 +66,94 @@ class PlaylistRepositoryImpl(
             }
         }
     }
+    override suspend fun getTracksForPlaylist(playlistId: Long): Flow<List<Track>> = flow {
+        appDatabase.playlistDao().getTracksForPlaylist(playlistId).collect { playlistEntity ->
+            if (playlistEntity?.tracks != null) {
+                val trackIds = deserializeTracks(playlistEntity.tracks)
+                val tracks = trackIds.mapNotNull { trackId ->
+                    trackInPlaylistDao.getTrackById(trackId.toInt())?.let { entity ->
+                        mapTrackInPlaylistEntityToTrack(entity)
+                    }
+                }
+                emit(tracks)
+            } else {
+                emit(emptyList())
+            }
+        }
+    }
+    override suspend fun getPlaylistById(playlistId: Long): Playlist? {
+        Log.d("Debug", "getPlaylistById called with playlistId: $playlistId")
+        val playlistEntity = appDatabase.playlistDao().getPlaylistById(playlistId)
+        Log.d("Debug", "Fetched PlaylistEntity: $playlistEntity")
+        return playlistEntity?.let { playlistConverter.map(it) }
+    }
+
+    override suspend fun deletePlaylistById(playlist: Playlist) {
+        val playlistEntity = appDatabase.playlistDao().getPlaylistById(playlist.id ?: 0)
+        playlistEntity?.let {
+
+            val trackIds = playlistEntity.tracks?.let { tracksJson ->
+                deserializeTracks(tracksJson)
+            } ?: emptyList()
+
+
+            appDatabase.playlistDao().deletePlaylist(playlist.id ?: 0)
+
+
+            val allPlaylists = appDatabase.playlistDao().getAllPlaylists()
+            val usedTrackIds = allPlaylists.flatMap { otherPlaylist ->
+                otherPlaylist.tracks?.let { deserializeTracks(it) } ?: emptyList()
+            }.toSet()
+
+
+            val unusedTrackIds = trackIds.filter { it !in usedTrackIds }
+            unusedTrackIds.forEach { trackId ->
+                appDatabase.trackInPlaylistDao().deleteTrack(trackId.toInt())
+            }
+        }
+    }
+
+    override suspend fun removeTrackFromPlaylist(track: Track, playlistId: Long) {
+        val playlist = getPlaylistById(playlistId)
+        playlist?.let {
+            // Преобразуем строку tracks обратно в список trackId
+            val trackListType = object : TypeToken<List<Int>>() {}.type
+            val trackIds: MutableList<Int> = Gson().fromJson(it.tracks, trackListType) ?: mutableListOf()
+
+            // Удаляем trackId
+            trackIds.remove(track.trackId)
+
+            // Преобразуем обратно в строку
+            val updatedTracks = if (trackIds.isEmpty()) {
+                null // Если список треков пуст, устанавливаем null
+            } else {
+                Gson().toJson(trackIds)
+            }
+
+            val updatedPlaylist = it.copy(
+                tracks = updatedTracks,
+                numberOfTracks = trackIds.size.toLong() // Обновляем количество треков
+            )
+
+            // Обновляем плейлист
+            updatePlaylist(updatedPlaylist)
+
+            // Проверяем, используется ли трек в других плейлистах
+            val playlistsWithTrack = appDatabase.playlistDao().getAllPlaylists().filter { playlistEntity ->
+                val playlistTrackIds = playlistEntity.tracks?.let { jsonTracks ->
+                    Gson().fromJson<List<Int>>(jsonTracks, object : TypeToken<List<Int>>() {}.type)
+                } ?: emptyList()
+                playlistTrackIds.contains(track.trackId)
+            }
+
+            // Если трек больше нигде не используется, удаляем его из базы
+            if (playlistsWithTrack.isEmpty()) {
+                appDatabase.trackInPlaylistDao().deleteTrack(track.trackId)
+            }
+
+        }
+
+    }
 
     // Сериализация списка треков в строку
     private fun serializeTracks(tracks: List<Long>): String {
@@ -92,6 +179,21 @@ class PlaylistRepositoryImpl(
             primaryGenreName = track.primaryGenreName,
             country = track.country,
             previewUrl = track.previewUrl
+        )
+    }
+    // Маппинг TrackInPlaylistEntity в Track
+    private fun mapTrackInPlaylistEntityToTrack(entity: TrackInPlaylistEntity): Track {
+        return Track(
+            trackId = entity.trackId,
+            trackName = entity.trackName,
+            artistName = entity.artistName,
+            trackTimeMillis = entity.trackTimeMillis,
+            artworkUrl100 = entity.artworkUrl100,
+            collectionName = entity.collectionName,
+            releaseDate = entity.releaseDate,
+            primaryGenreName = entity.primaryGenreName,
+            country = entity.country,
+            previewUrl = entity.previewUrl
         )
     }
 }

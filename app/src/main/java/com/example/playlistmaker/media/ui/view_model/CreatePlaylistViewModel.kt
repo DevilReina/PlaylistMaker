@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CreatePlaylistViewModel(
+open class CreatePlaylistViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
@@ -16,6 +16,13 @@ class CreatePlaylistViewModel(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 playlistInteractor.createPlaylist(Playlist(0, title, description, imageUri, null, 0))
+            }
+        }
+    }
+    fun updatePlaylist(updatedPlaylist: Playlist) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                playlistInteractor.updatePlaylist(updatedPlaylist)
             }
         }
     }

@@ -1,19 +1,25 @@
-package com.example.playlistmaker.media.db
+package com.example.playlistmaker.media.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.playlistmaker.media.data.converters.TrackDbConvertor
+import com.example.playlistmaker.media.data.db.entities.PlaylistEntity
+import com.example.playlistmaker.media.data.db.entities.TrackEntity
+import com.example.playlistmaker.media.data.db.entities.TrackInPlaylistEntity
 
-import com.example.playlistmaker.media.db.dao.PlaylistDao
-import com.example.playlistmaker.media.db.dao.TrackDao
-import com.example.playlistmaker.media.db.dao.TrackInPlaylistDao
+import com.example.playlistmaker.media.data.dao.PlaylistDao
+import com.example.playlistmaker.media.data.dao.TrackDao
+import com.example.playlistmaker.media.data.dao.TrackInPlaylistDao
 
 
 @Database(version = 5, entities = [TrackEntity::class, PlaylistEntity::class, TrackInPlaylistEntity::class])
+@TypeConverters(TrackDbConvertor::class)
 
 abstract class AppDatabase : RoomDatabase() {
 

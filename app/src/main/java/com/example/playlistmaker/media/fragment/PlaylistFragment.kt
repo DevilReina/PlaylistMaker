@@ -24,7 +24,12 @@ class PlaylistFragment : Fragment() {
 
     private val viewModel: PlaylistViewModel by viewModel<PlaylistViewModel>()
 
-    private val playlistAdapter by lazy { PlaylistAdapter(emptyList()) }
+    private val playlistAdapter by lazy {
+        PlaylistAdapter(emptyList()) { playlist ->
+            val action = MediaLibraryFragmentDirections.actionMediaFragmentToOpenAlbumFragment(playlist)
+            findNavController().navigate(action)
+        }
+    }
 
 
     override fun onCreateView(

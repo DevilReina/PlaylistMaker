@@ -1,11 +1,12 @@
-package com.example.playlistmaker.media.db.dao
+package com.example.playlistmaker.media.data.dao
+
 
 import androidx.room.Dao
-
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.playlistmaker.media.db.TrackInPlaylistEntity
+import com.example.playlistmaker.media.data.db.entities.TrackInPlaylistEntity
+
 
 @Dao
 interface TrackInPlaylistDao {
@@ -17,5 +18,7 @@ interface TrackInPlaylistDao {
     suspend fun getTrackById(trackId: Int): TrackInPlaylistEntity?
 
     @Query("DELETE FROM track_in_playlist WHERE trackId = :trackId")
-    suspend fun deleteTrack(trackId: Int)
+    suspend fun deleteTrack(trackId: kotlin.Int)
+
+
 }

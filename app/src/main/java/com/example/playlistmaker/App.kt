@@ -8,7 +8,7 @@ import com.example.playlistmaker.di.dataModule
 import com.example.playlistmaker.di.interactorModule
 import com.example.playlistmaker.di.repositoryModule
 import com.example.playlistmaker.di.viewModelModule
-import com.example.playlistmaker.media.db.AppDatabase
+import com.example.playlistmaker.media.data.db.AppDatabase
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import com.example.playlistmaker.utils.DARK_THEME
 import com.example.playlistmaker.utils.THEME_PREFS

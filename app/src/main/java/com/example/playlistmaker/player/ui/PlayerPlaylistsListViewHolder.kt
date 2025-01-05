@@ -32,7 +32,7 @@ class PlayerPlaylistsListViewHolder(
 
         playlistTitle.text = playlist.title
         playlistNumberOfTracks.text = itemView.context.resources.getQuantityString(
-            R.plurals.tracks_plurals,
+            R.plurals.tracks_count,
             playlist.numberOfTracks.toInt(),
             playlist.numberOfTracks.toInt()
         )
