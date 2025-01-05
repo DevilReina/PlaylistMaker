@@ -1,5 +1,6 @@
 package com.example.playlistmaker.media.fragment
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -122,6 +123,7 @@ class CreatePlaylistFragment : Fragment() {
     private fun setupBackNavigation() {
         binding.back.setOnClickListener {
             navigateUpOrConfirm()
+            updateSaveButton()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
@@ -182,7 +184,7 @@ class CreatePlaylistFragment : Fragment() {
                     .into(binding.playlistCover)
 
                 imageUri = uri
-
+                updateSaveButton()
             } else {
                 Toast.makeText(requireContext(), "Ничего не выбрано", Toast.LENGTH_SHORT).show()
             }
@@ -212,6 +214,7 @@ class CreatePlaylistFragment : Fragment() {
                 titleEditText.isActivated = hasText
                 titleTopHint.visibility = if (s.isNullOrBlank()) View.INVISIBLE else View.VISIBLE
                 binding.createButton.isEnabled = !s.isNullOrBlank()
+                updateSaveButton()
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -224,6 +227,7 @@ class CreatePlaylistFragment : Fragment() {
                 val hasText = !s.isNullOrBlank()
                 descriptionEditText.isActivated = hasText
                 descriptionTopHint.visibility = if (s.isNullOrBlank()) View.INVISIBLE else View.VISIBLE
+                updateSaveButton()
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -277,11 +281,20 @@ class CreatePlaylistFragment : Fragment() {
     private fun isAnyFieldSet(): Boolean {
         val currentTitle = binding.playlistTitle.text.toString()
         val currentDescription = binding.playlistDescription.text.toString()
+        val currentImageUri = imageUri?.toString()
+
         return currentTitle != initialTitle ||
                 currentDescription != initialDescription ||
-                (imageUri?.toString() ?: initialImageUri) != initialImageUri
+                currentImageUri != initialImageUri
     }
 
+    private fun updateSaveButton(){
+        val isTitleNotEmpty = !binding.playlistTitle.text.isNullOrBlank()
+        val hasChanges = isAnyFieldSet()
+        binding.createButton.isEnabled = isTitleNotEmpty && hasChanges
+    }
+
+    @SuppressLint("SuspiciousIndentation")
     private fun showConfirmationDialog() {
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.CustomAlertDialogTheme)
             .setTitle(getString(R.string.close_playlist_dialog_title))
